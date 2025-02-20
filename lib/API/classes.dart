@@ -35,4 +35,41 @@ double findDouble(XmlElement node, String tagName) {
   }
   throw ArgumentError('Missing or invalid <$tagName> in XML');
 }
+bool findBool(XmlElement node, String tagName, {bool defaultValue = false}) {
+  final elements = node.findElements(tagName);
+  return elements.isNotEmpty
+      ? (elements.single.text.toLowerCase() == 'true')
+      : defaultValue;
+}
 
+class User{
+  final String Login;
+  final String Password;
+  final String Nom;
+  final String Email;
+  final int Profil;
+  final int  Operateur;
+  final bool Connecte;
+  User( { 
+  required this.Login,
+  required this.Password,
+  required this.Nom, 
+  required this.Email, 
+  required this.Profil, 
+  required this.Operateur,
+  required  this.Connecte,
+});
+  factory User.fromXml(XmlElement node) {
+    return User(
+      Login: findText(node, 'Login'),
+      Password: findText(node, 'Password'),
+      Nom: findText(node, 'Nom'),
+      Email: findText(node, 'Email'), 
+      Profil: findInt(node, 'Profil'),
+      Operateur: findInt(node, 'Operateur'),
+      Connecte: findBool(node, 'Connecte') ,
+
+       );
+}
+}
+  
