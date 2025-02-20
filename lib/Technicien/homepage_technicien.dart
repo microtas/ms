@@ -9,7 +9,7 @@ class HomePageTechnicien extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Softer background color
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         title: Text('Accueil Technicien',
             style: TextStyle(
@@ -26,21 +26,21 @@ class HomePageTechnicien extends StatelessWidget {
             Text(
               'Bienvenue !',
               style: TextStyle(
-                fontSize: 28,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue[900],
               ),
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: GridView.builder( // Use GridView.builder for better performance
+              child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  childAspectRatio: 1.2, // Adjust aspect ratio for better button shape
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 1,
                 ),
-                itemCount: _menuItems.length, // List of menu items
+                itemCount: _menuItems.length,
                 itemBuilder: (context, index) {
                   return _buildMenuButton(context, _menuItems[index]);
                 },
@@ -52,13 +52,12 @@ class HomePageTechnicien extends StatelessWidget {
     );
   }
 
-
-  final List<_MenuItem> _menuItems = [ // Define menu items as a list
-    _MenuItem(Icons.task, 'Ordres de travail', TaskOrderPage()),
-    _MenuItem(Icons.assignment, 'Tâches', TaskPage()),
-    _MenuItem(Icons.calendar_today, 'Planning', const Planning()),
-    _MenuItem(Icons.receipt_long, 'Interventions', FicheInterventionListPage(interventions: [])),
-    _MenuItem(Icons.person, 'Profil', ProfilPageTech()),
+  final List<_MenuItem> _menuItems = [
+    _MenuItem('assets/ordre.png', 'Ordres de travail', TaskOrderPage()),
+    _MenuItem('assets/ordre.png', 'Tâches', TaskPage()),
+    _MenuItem('assets/ordre.png', 'Planning', const Planning()),
+    _MenuItem('assets/ordre.png', 'Interventions', FicheInterventionListPage(interventions: [])),
+    _MenuItem('assets/ordre.png', 'Profil', ProfilPageTech()),
   ];
 
   Widget _buildMenuButton(BuildContext context, _MenuItem menuItem) {
@@ -68,23 +67,23 @@ class HomePageTechnicien extends StatelessWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
-        padding: const EdgeInsets.all(15), // Smaller padding
+        padding: const EdgeInsets.all(20),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
         ),
-        shadowColor: Colors.black26,
-        elevation: 5, // Reduced elevation
+        shadowColor: Colors.blue[900],
+        elevation: 10,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(menuItem.icon, size: 50, color: Colors.amber[400]), // Larger icon
-          const SizedBox(height: 8), // Smaller spacing
+          Image.asset(menuItem.iconPath, height: 80, fit: BoxFit.contain),
+          const SizedBox(height: 10),
           Text(menuItem.label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 16, // Slightly smaller font size
-                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
                   color: Colors.blue[900])),
         ],
       ),
@@ -92,10 +91,10 @@ class HomePageTechnicien extends StatelessWidget {
   }
 }
 
-class _MenuItem { // Helper class for menu items
-  final IconData icon;
+class _MenuItem {
+  final String iconPath;
   final String label;
   final Widget page;
 
-  _MenuItem(this.icon, this.label, this.page);
+  _MenuItem(this.iconPath, this.label, this.page);
 }
