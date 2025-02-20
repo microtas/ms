@@ -82,7 +82,7 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                               children: [
                                 CircleAvatar(
                                   backgroundColor: Colors.amber[600],
-                                  child: Icon(Icons.work, color: Colors.white),
+                                  child: const Icon(Icons.work, color: Colors.white),
                                 ),
                                 const SizedBox(width: 15),
                                 Expanded(
@@ -91,7 +91,7 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                     children: [
                                       Text(
                                         'Tâche: ${intervention['taskDescription']}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
@@ -100,7 +100,7 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                       const SizedBox(height: 5),
                                       Text(
                                         'Équipements: ${intervention['equipments']}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color: Colors.black,
                                         ),
@@ -165,7 +165,7 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
             _addIntervention(newIntervention);
           }
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.amber[600],
       ),
     );

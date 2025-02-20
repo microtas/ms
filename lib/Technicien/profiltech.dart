@@ -21,7 +21,7 @@ class _ProfilPageTechState extends State<ProfilPageTech> {
       appBar: AppBar(
         title: const Center(child: Text("Mon Profil", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white))),
         backgroundColor: Colors.blue[900],
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: Padding(

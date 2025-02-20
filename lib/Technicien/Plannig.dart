@@ -82,7 +82,6 @@ class _PlanningState extends State<Planning> {
           timeSlotViewSettings: const TimeSlotViewSettings(
             startHour: 1,
             endHour: 24,
-          //  timeInterval: Duration(minutes: 90),
             timeIntervalWidth: 250,
             timeIntervalHeight: 50,
             timeTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
