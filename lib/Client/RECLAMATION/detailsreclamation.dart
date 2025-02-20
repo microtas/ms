@@ -169,7 +169,6 @@ class ReclamationDetailPage extends StatelessWidget {
     }
   }
 
-  // Fonction pour déterminer la couleur de l'état de la réclamation
   Color _getEtatColor(int etat) {
     switch (etat) {
       case 0: return Colors.red; // Rouge pour "Demande soumise"

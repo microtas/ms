@@ -18,10 +18,28 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
     });
   }
 
+  // Méthode pour modifier une intervention
+  void _editIntervention(int index, Map<String, String> updatedIntervention) {
+    setState(() {
+      widget.interventions[index] = updatedIntervention;
+    });
+  }
+
   void _deleteIntervention(int index) {
     setState(() {
       widget.interventions.removeAt(index); // Supprime l'élément à l'index donné
     });
+  }
+
+  Color _getCardColor(String state) {
+    switch (state) {
+      case '0':
+        return Colors.white; 
+      case '1':
+        return Colors.grey[300] ?? Colors.grey; 
+      default:
+        return Colors.white;
+    }
   }
 
   @override
@@ -29,8 +47,8 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Liste des Fiches d\'Intervention', style: const TextStyle(color: Colors.white)),
-        backgroundColor: Colors.teal,
+        title: const Text('Liste des Fiches d\'Intervention', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+        backgroundColor: Colors.blue[900],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
@@ -49,19 +67,21 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                       itemCount: widget.interventions.length,
                       itemBuilder: (context, index) {
                         final intervention = widget.interventions[index];
+                        final state = intervention['state'] ?? '0'; // Par défaut à 0
+
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                           elevation: 5,
-                          color: Colors.white,
+                          color: _getCardColor(state),
                           child: Padding(
                             padding: const EdgeInsets.all(15),
                             child: Row(
                               children: [
-                                const CircleAvatar(
-                                  backgroundColor: Colors.teal,
+                                CircleAvatar(
+                                  backgroundColor: Colors.amber[600],
                                   child: Icon(Icons.work, color: Colors.white),
                                 ),
                                 const SizedBox(width: 15),
@@ -74,7 +94,7 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.teal[800],
+                                          color: Colors.black,
                                         ),
                                       ),
                                       const SizedBox(height: 5),
@@ -82,7 +102,7 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                         'Équipements: ${intervention['equipments']}',
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.teal[600],
+                                          color: Colors.black,
                                         ),
                                       ),
                                       const SizedBox(height: 5),
@@ -97,10 +117,33 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                   ),
                                 ),
                                 // Icône pour supprimer l'intervention
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => _deleteIntervention(index),
-                                ),
+                                if (state == '0')
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit, color: Colors.blue),
+                                        onPressed: () async {
+                                          // Modifier l'intervention
+                                          final updatedIntervention = await Navigator.push<Map<String, String>>(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => InterventionFormPage(
+                                                existingIntervention: intervention,
+                                              ),
+                                            ),
+                                          );
+
+                                   if (updatedIntervention != null) {
+                                            _editIntervention(index, updatedIntervention);
+                                          }
+                                               },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete, color: Colors.red),
+                                        onPressed: () => _deleteIntervention(index),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
@@ -122,8 +165,8 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
             _addIntervention(newIntervention);
           }
         },
-        child: const Icon(Icons.add, color: Colors.white),
-        backgroundColor: Colors.teal,
+        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.amber[600],
       ),
     );
   }

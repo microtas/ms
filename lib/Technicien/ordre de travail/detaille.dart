@@ -14,12 +14,17 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.task['designation']!,style: const TextStyle(color: Colors.white),),
-        backgroundColor: Colors.teal,
+        title: Text(widget.task['designation']!,style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          )),
+        backgroundColor: Colors.blue[900], // Couleur bleu foncé
         elevation: 4,
         iconTheme: const IconThemeData(color: Colors.white),
+        centerTitle: true,
       ),
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.grey[50], // Fond clair pour contraster avec le bleu
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: SingleChildScrollView(
@@ -29,16 +34,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               // Main Title
               Text(
                 'Demande de client No: ${widget.task['client_request_no']}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal,
+                  color: Colors.black, // Bleu foncé pour la cohérence
                 ),
               ),
               const SizedBox(height: 15),
-              Divider(color: Colors.teal[300]),
+              Divider(color: Colors.blue[300]), // Légère couleur bleue
 
-              _buildSection('Responsable:', widget.task['responsable']!),
+              _buildSection('Responsable:', widget.task['responsable']!, icon: Icons.person),
               const SizedBox(height: 15),
               Row(
                 children: [
@@ -60,11 +65,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               const SizedBox(height: 20),
 
               // Work Details
-              _buildSection('Détails du travail:', widget.task['details']!),
+              _buildSection('Détails du travail:', widget.task['details']!, icon: Icons.description),
               const SizedBox(height: 20),
 
               // Additional Information
-              _buildSection('Informations complémentaires:', widget.task['additional_info']!),
+              _buildSection('Informations complémentaires:', widget.task['additional_info']!, icon: Icons.info),
               const SizedBox(height: 20),
 
               // Equipment Used
@@ -77,24 +82,39 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   // Widget for displaying sections with title and content
-  Widget _buildSection(String title, String content) {
+  Widget _buildSection(String title, String content, {IconData? icon}) {
     return Card(
       color: Colors.white,
       elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              content,
-              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            if (icon != null) Icon(icon, color: Colors.amber[400], size: 28), // Bleu foncé pour l'icône
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black, // Bleu foncé pour le titre
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    content,
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -108,14 +128,17 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       color: Colors.white,
       elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+             Text(
               'Équipements utilisés:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             const SizedBox(height: 10),
             _buildEquipInfo('Nom', widget.task['equipment_name']!),
@@ -128,27 +151,42 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   // Widget for date and time information with style
   Widget _buildDateInfo(String label, String value) {
-    return _buildInfoCard(label, value);
+    return _buildInfoCard(label, value, icon: Icons.calendar_today);
   }
 
   Widget _buildTimeInfo(String label, String value) {
-    return _buildInfoCard(label, value);
+    return _buildInfoCard(label, value, icon: Icons.access_time);
   }
 
   // Common widget for displaying information in a styled container
-  Widget _buildInfoCard(String label, String value) {
+  Widget _buildInfoCard(String label, String value, {IconData? icon}) {
     return Card(
       color: Colors.white,
       elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(label, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
-            const SizedBox(height: 5),
-            Text(value, style: const TextStyle(fontSize: 16, color: Colors.teal)),
+            if (icon != null) Icon(icon, color: Colors.amber[400], size: 24), // Utilisation du bleu foncé pour l'icône
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  value,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]), // Bleu foncé pour la valeur
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -158,15 +196,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   // Widget for displaying equipment information
   Widget _buildEquipInfo(String label, String value) {
     return Padding(
-      
       padding: const EdgeInsets.only(top: 5),
       child: Row(
-        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '$label: ',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.teal),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black), // Bleu foncé pour les labels
           ),
           Expanded(
             child: Text(

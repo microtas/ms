@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ms_maintain/Client/HomePage.dart';
 import 'package:ms_maintain/Technicien/homepage_technicien.dart';
+import 'package:ms_maintain/login.dart';
 
 
 void main() {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(),
+      home: HomePageTechnicien(),
       
     );
   }

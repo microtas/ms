@@ -3,6 +3,10 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class InterventionFormPage extends StatefulWidget {
+  final Map<String, String>? existingIntervention;
+
+  InterventionFormPage({this.existingIntervention});
+
   @override
   _InterventionFormPageState createState() => _InterventionFormPageState();
 }
@@ -20,6 +24,17 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
   ];
 
   List<String> _selectedEquipments = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Si une intervention existante est passée, initialiser les champs
+    if (widget.existingIntervention != null) {
+      _taskDescriptionController.text = widget.existingIntervention?['taskDescription'] ?? '';
+      _selectedEquipments = (widget.existingIntervention?['equipments'] ?? '').split(', ');
+    }
+  }
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -39,76 +54,95 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Gestion des Fiches d\'Intervention', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.teal,
-        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          widget.existingIntervention == null ? 'Créer une Fiche d\'Intervention' : 'Modifier la Fiche d\'Intervention',
+          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blue[900],
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Créer une Fiche d\'Intervention',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.teal),
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: _taskDescriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description de la tâche',
-                    
-                    border: OutlineInputBorder(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.existingIntervention == null ? 'Créer une Fiche d\'Intervention' : 'Modifier une Fiche d\'Intervention',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+              ),
+              SizedBox(height: 20),
 
-                    ),
-                    prefixIcon: Icon(Icons.description, color: Colors.teal),
+              // Description de la tâche
+              TextFormField(
+                controller: _taskDescriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Description de la tâche',
+                  labelStyle: TextStyle(color: Colors.grey),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide(color: const Color.fromARGB(255, 13, 71, 161)),
                   ),
-                  maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Veuillez décrire la tâche';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                const Text('Équipements utilisés', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.teal)),
-                const SizedBox(height: 10),
-                MultiSelectDialogField(
-                  items: equipmentList
-                      .map((equipment) => MultiSelectItem<String>(equipment, equipment))
-                      .toList(),
-                  title: const Text("Sélectionnez des équipements", style: TextStyle(color: Colors.teal)),
-                  selectedColor: Colors.teal,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    border: Border.all(color: Colors.teal),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide(color: Color.fromARGB(255, 13, 71, 161)),
                   ),
-                  buttonText: const Text("Sélectionner des équipements", style: TextStyle(color: Colors.grey)),
-                  onConfirm: (results) {
-                    setState(() {
-                      _selectedEquipments = List<String>.from(results);
-                    });
-                  },
+                  prefixIcon: Icon(Icons.description, color: Colors.amber[600]),
                 ),
-                const SizedBox(height: 30),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ), 
-                    child: const Text('Soumettre', style: TextStyle(color: Colors.white)),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Veuillez décrire la tâche';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),  // Espacement plus important
+
+              // Équipements utilisés
+              Text(
+                'Équipements utilisés',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+              ),
+              SizedBox(height: 10),
+              MultiSelectDialogField(
+                items: equipmentList
+                    .map((equipment) => MultiSelectItem<String>(equipment, equipment))
+                    .toList(),
+                title: Text("Sélectionnez des équipements", style: TextStyle(color: Colors.blue[900])),
+                selectedColor: Colors.amber[600],
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  border: Border.all(color: Colors.grey),
+                ),
+                buttonText: Text("Sélectionner des équipements", style: TextStyle(color: Colors.grey)),
+                onConfirm: (results) {
+                  setState(() {
+                    _selectedEquipments = List<String>.from(results);
+                  });
+                },
+              ),
+              SizedBox(height: 30),  // Espacement plus important
+
+              // Utilisation de Spacer pour pousser le bouton en bas
+              Expanded(child: SizedBox()),
+
+              // Bouton Soumettre
+              Center(
+                child: ElevatedButton(
+                  onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber[600],
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    textStyle: TextStyle(fontSize: 16),
+                    elevation: 3, // Effet de profondeur subtile
                   ),
+                  child: Text('Soumettre', style: TextStyle(color: Colors.white)),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

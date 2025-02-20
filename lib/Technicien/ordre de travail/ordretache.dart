@@ -41,38 +41,30 @@ class _TaskOrderPageState extends State<TaskOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:Colors.white ,
       appBar: AppBar(
-        title: const Text('Ordre de Tâche',style: TextStyle(color: Colors.white)),
+        title: const Text('Ordre de Tâche',style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          )),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.blue[900],
         iconTheme: const IconThemeData(color: Colors.white),
-
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(15.0),
         itemCount: tasks.length,
         itemBuilder: (context, index) {
           return Card(
-            elevation: 6,
-            margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(15),
             ),
-            child: ListTile(
-              leading: const Icon(Icons.build, color: Colors.teal, size: 40),
-              title: Text(
-                tasks[index]['designation']!,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.teal[800],
-                ),
-              ),
-              subtitle: Text(
-                'Date: ${tasks[index]['date']}',
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+            color: Colors.grey[100],
+            child: InkWell(
+              borderRadius: BorderRadius.circular(15),
               onTap: () {
                 Navigator.push(
                   context,
@@ -81,6 +73,54 @@ class _TaskOrderPageState extends State<TaskOrderPage> {
                   ),
                 );
               },
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.build,
+                      color: Colors.amber[600],
+                      size: 40,
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tasks[index]['designation']!,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Date: ${tasks[index]['date']}',
+                            style: TextStyle(
+                              color: Colors.black45,
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            'Responsable: ${tasks[index]['responsable']}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.blue[900],
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         },
