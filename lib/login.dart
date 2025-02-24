@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ms_maintain/API/HttpRequest.dart';
+import 'package:ms_maintain/API/classes.dart';
+import 'package:ms_maintain/API/paresXML.dart';
+import 'package:ms_maintain/API/user.dart';
 import 'package:ms_maintain/Client/HomePage.dart';
+import 'package:ms_maintain/Technicien/homepage_technicien.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -11,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _matriculeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   String _errorMessage = '';
@@ -19,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _matriculeController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -80,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _buildTextFormField(
                                   label: 'Identifant...',
                                   icon: Icons.perm_identity_sharp,
-                                  controller: _emailController,
+                                  controller: _matriculeController,
                                   validator: _validateEmail,
                                 ),
                                 const SizedBox(height: 20),
@@ -124,20 +129,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 55,
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              // If the form is valid, navigate to HomePage
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) =>MyHomePage()),
-                              );
-                            } else {
-                              // Show error message if the form is invalid
-                              setState(() {
-                                _errorMessage = 'Veuillez corriger les erreurs ci-dessus.';
-                              });
-                            }
-                          },
+                          onPressed:_submit,
+
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
@@ -147,6 +140,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: const Text(
                             'Se Connecter',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                       SizedBox(
+                        height: 55,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed:(){
+                                  Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
+                          },
+
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            backgroundColor: Colors.blue[900],
+                            elevation: 4,
+                          ),
+                          child: const Text(
+                            'CLIENT',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -202,43 +224,96 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _submitForm() {
+void _submit() async {
+  if (_formKey.currentState?.validate() ?? false) {
     setState(() {
       _errorMessage = '';
-      _isLoading = true;
+      _isLoading = true; // Active le chargement
     });
 
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        _isLoading = false;
-      });
+    // Vérification si la matricule est alphabétique
+bool isMatriculeAlphabetic = RegExp(r'^[a-zA-Z]+$').hasMatch(_matriculeController.text.trim());
+try {
+  if (isMatriculeAlphabetic) {
+    final user = await THttpHelper.post<User>(
+      'GetUser',
+      {
+        'Login': _matriculeController.text,
+        'Pass': _passwordController.text,
+      },
+      (responseBody) {
+        return parseUser(responseBody);
+      },
+    );
 
-      Navigator.pushReplacement(
+    if (user.isNotEmpty) {
+            print('le technicien $user');
+
+          final loggedInUser = user.first;
+          CurrentUser.setLoggedInUser(loggedInUser);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePageTechnicien()),
+      );
+    } else {
+      setState(() {
+        _errorMessage = 'Identifiant ou mot de passe incorrect.';
+      });
+    }
+  } else {
+    final client = await THttpHelper.post<Client>(
+      'GetCLient',
+      {
+        'Login': _matriculeController.text,
+        'Pass': _passwordController.text,
+      },
+      (responseBody) {
+        return parseClient(responseBody);
+      },
+    );
+
+    if (client.isNotEmpty) {
+          final loggedInClient = client.first;
+          CurrentUser.setLoggedInClient(loggedInClient); 
+
+      print(client);
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MyHomePage()),
       );
-    });
+    } else {
+      setState(() {
+        _errorMessage = 'Identifiant ou mot de passe incorrect.';
+      });
+    }
   }
+} catch (e) {
+  setState(() {
+    _errorMessage = 'Erreur: $e';
+  });
+  print('Erreur lors de la requête: $e');
+}
 
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Veuillez corriger les erreurs')),
+    );
+  }
+}
+
+  
+  
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'L\'email est obligatoire';
     }
-    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value)) {
-      return 'Veuillez entrer un email valide';
-    }
-    return null;
+    
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Le mot de passe est obligatoire';
     }
-    if (value.length < 8) {
-      return 'Le mot de passe doit contenir au moins 8 caractères';
-    }
-    return null;
+  
   }
 }

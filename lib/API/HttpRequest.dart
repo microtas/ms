@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
  
 
 class THttpHelper {
-  static const String _baseUrl = 'http://mserp.tn:85/enseignant01.asmx';  
+  static const String _baseUrl = 'http://mserp.tn:88/prod.asmx';  
 
   static Future<List<T>> get<T>(String endpoint, Function(String) parse, {Map<String, String>? queryParameters}) async {
   // Construire l'URI avec les paramètres de requête
