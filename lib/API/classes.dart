@@ -79,304 +79,85 @@ class User{
        );
 }
 }
+
 class Client {
-  final String CodeClient;
-  final String Raison;
-  final String Famille;
-  final String Civilite;
-  final String Adresse;
-  final String Adresse_Suite;
-  final String CP;
-  final String Gouvernorat;
-  final String Pays;
-  final String Tel1;
-  final String Tel2;
-  final String Fax;
-  final String Email;
-  final String SiteWeb;
-  final String Contact;
-  final bool Exonere;
-  final bool Majoration;
-  final double MF;
-  final double Remise;
-  final String Banque;
-  final String AdresseBq;
-  final String CompteBq;
-  final String Compte;
-  final String CodeTarif;
-  final String TarifExp;
-  final DateTime DebExo;
-  final DateTime FinExo;
-  final double TimbFis;
-  final String SectAct;
-  final String Commercial;
-  final String ModPai;
-  final double Encours;
-  final double EncoursBL;
-  final String Pass;
-  final String Code;
-  final String Designation;
-  final String Maint;
-  final String Secteur;
-  final String Famille1;
-  final String Type;
-  final double CoutArr;
-  final int NbArr;
-  final String PerArr;
-  final String UnArr;
-  final String Nature;
-  final String Compteur;
-  final String Direction;
-  final String Service;
-  final String Section;
-  final String NumSerie;
-  final String NumModele;
-  final String Fabricant;
-  final DateTime DatAch;
-  final DateTime DatSvc;
-  final String CodFrn;
-  final String Fichier;
-  final String Photo;
-  final String Prg;
-  final String LogUser;
-  final String Technique;
-  final String Obs;
-  final String Agence;
-  final String Etage;
-  final String Bureau;
-  final String Emplacement;
-  final String CodInv;
-  final String Etat;
-  final String ClientRef;
-  final DateTime Entree;
-  final String Ste;
-  final String QRCode;
-  final double TxFct;
-  final String CodeClient1;
-  final String Raison1;
-  final String Famille2;
-  final String Civilite1;
-  final String Adresse1;
-  final String Adresse_Suite1;
-  final String CP1;
-  final String Gouvernorat1;
-  final String Pays1;
-  final String Tel11;
-  final String Tel21;
-  final String Fax1;
-  final String Email1;
-  final String SiteWeb1;
-  final String Contact1;
-  final bool Exonere1;
-  final bool Majoration1;
-  final double MF1;
-  final double Remise1;
-  final String Banque1;
-  final String AdresseBq1;
-  final String CompteBq1;
-  final String Compte1;
-  final String CodeTarif1;
-  final double TarifExp1;
-  final DateTime DebExo1;
-  final DateTime FinExo1;
-  final double TimbFis1;
-  final String SectAct1;
-  final String Commercial1;
-  final String ModPai1;
-  final double Encours1;
-  final double EncoursBL1;
-  final String Pass1;
-  final String Code1;
-  final String Designation1;
-  final String Maint1;
-  final String Secteur1;
-  final String Famille3;
-  final String Type1;
-  final double CoutArr1;
-  final int NbArr1;
-  final String PerArr1;
-  final String UnArr1;
-  final String Nature1;
-  final String Compteur1;
-  final String Direction1;
-  final String Service1;
-  final String Section1;
-  final String NumSerie1;
-  final String NumModele1;
-  final String Fabricant1;
-  final DateTime DatAch1;
-  final DateTime DatSvc1;
-  final String CodFrn1;
-  final String Fichier1;
-  final String Photo1;
-  final String Prg1;
-  final String LogUser1;
-  final String Technique1;
-  final String Obs1;
-  final String Agence1;
-  final String Etage1;
-  final String Bureau1;
-  final String Emplacement1;
-  final String CodInv1;
-  final String Etat1;
-  final String Client1;
-  final DateTime Entree1;
-  final String Ste1;
-  final String QRCode1;
-  final double TxFct1;
+  final String? CodeClient;
+  final String? Raison;
+  final int? Famille;
+  final String? Civilite;
+  final String? Adresse;
+  final String? Adresse_Suite;
+  final String? CP;
+  final String? Gouvernorat;
+  final String? Pays;
+  final String? Tel1;
+  final String? Tel2;
+  final String? Fax;
+  final String? Email;
+  final String? SiteWeb;
+  final int? Contact;
+  final bool? Exonere;
+  final bool? Majoration;
+  final String? MF;
+  final int? Remise;
+  final int? Banque;
+  final String? AdresseBq;
+  final String? CompteBq;
+  final int? Compte;
+  final int? CodeTarif;
+  final String? TarifExp;
+  final DateTime? DebExo;
+  final DateTime? FinExo;
+  final bool? TimbFis;
+  final int? SectAct;
+  final String? Commercial;
+  final String? ModPai;
+  final double? Encours;
+  final double? EncoursBL;
+  final String? Pass;
 
   Client({
-    required this.CodeClient,
-    required this.Raison,
-    required this.Famille,
-    required this.Civilite,
-    required this.Adresse,
-    required this.Adresse_Suite,
-    required this.CP,
-    required this.Gouvernorat,
-    required this.Pays,
-    required this.Tel1,
-    required this.Tel2,
-    required this.Fax,
-    required this.Email,
-    required this.SiteWeb,
-    required this.Contact,
-    required this.Exonere,
-    required this.Majoration,
-    required this.MF,
-    required this.Remise,
-    required this.Banque,
-    required this.AdresseBq,
-    required this.CompteBq,
-    required this.Compte,
-    required this.CodeTarif,
-    required this.TarifExp,
-    required this.DebExo,
-    required this.FinExo,
-    required this.TimbFis,
-    required this.SectAct,
-    required this.Commercial,
-    required this.ModPai,
-    required this.Encours,
-    required this.EncoursBL,
-    required this.Pass,
-    required this.Code,
-    required this.Designation,
-    required this.Maint,
-    required this.Secteur,
-    required this.Famille1,
-    required this.Type,
-    required this.CoutArr,
-    required this.NbArr,
-    required this.PerArr,
-    required this.UnArr,
-    required this.Nature,
-    required this.Compteur,
-    required this.Direction,
-    required this.Service,
-    required this.Section,
-    required this.NumSerie,
-    required this.NumModele,
-    required this.Fabricant,
-    required this.DatAch,
-    required this.DatSvc,
-    required this.CodFrn,
-    required this.Fichier,
-    required this.Photo,
-    required this.Prg,
-    required this.LogUser,
-    required this.Technique,
-    required this.Obs,
-    required this.Agence,
-    required this.Etage,
-    required this.Bureau,
-    required this.Emplacement,
-    required this.CodInv,
-    required this.Etat,
-    required this.ClientRef,
-    required this.Entree,
-    required this.Ste,
-    required this.QRCode,
-    required this.TxFct,
-    required this.CodeClient1,
-    required this.Raison1,
-    required this.Famille2,
-    required this.Civilite1,
-    required this.Adresse1,
-    required this.Adresse_Suite1,
-    required this.CP1,
-    required this.Gouvernorat1,
-    required this.Pays1,
-    required this.Tel11,
-    required this.Tel21,
-    required this.Fax1,
-    required this.Email1,
-    required this.SiteWeb1,
-    required this.Contact1,
-    required this.Exonere1,
-    required this.Majoration1,
-    required this.MF1,
-    required this.Remise1,
-    required this.Banque1,
-    required this.AdresseBq1,
-    required this.CompteBq1,
-    required this.Compte1,
-    required this.CodeTarif1,
-    required this.TarifExp1,
-    required this.DebExo1,
-    required this.FinExo1,
-    required this.TimbFis1,
-    required this.SectAct1,
-    required this.Commercial1,
-    required this.ModPai1,
-    required this.Encours1,
-    required this.EncoursBL1,
-    required this.Pass1,
-    required this.Code1,
-    required this.Designation1,
-    required this.Maint1,
-    required this.Secteur1,
-    required this.Famille3,
-    required this.Type1,
-    required this.CoutArr1,
-    required this.NbArr1,
-    required this.PerArr1,
-    required this.UnArr1,
-    required this.Nature1,
-    required this.Compteur1,
-    required this.Direction1,
-    required this.Service1,
-    required this.Section1,
-    required this.NumSerie1,
-    required this.NumModele1,
-    required this.Fabricant1,
-    required this.DatAch1,
-    required this.DatSvc1,
-    required this.CodFrn1,
-    required this.Fichier1,
-    required this.Photo1,
-    required this.Prg1,
-    required this.LogUser1,
-    required this.Technique1,
-    required this.Obs1,
-    required this.Agence1,
-    required this.Etage1,
-    required this.Bureau1,
-    required this.Emplacement1,
-    required this.CodInv1,
-    required this.Etat1,
-    required this.Client1,
-    required this.Entree1,
-    required this.Ste1,
-    required this.QRCode1,
-    required this.TxFct1,
+    this.CodeClient,
+    this.Raison,
+    this.Famille,
+    this.Civilite,
+    this.Adresse,
+    this.Adresse_Suite,
+    this.CP,
+    this.Gouvernorat,
+    this.Pays,
+    this.Tel1,
+    this.Tel2,
+    this.Fax,
+    this.Email,
+    this.SiteWeb,
+    this.Contact,
+    this.Exonere,
+    this.Majoration,
+    this.MF,
+    this.Remise,
+    this.Banque,
+    this.AdresseBq,
+    this.CompteBq,
+    this.Compte,
+    this.CodeTarif,
+    this.TarifExp,
+    this.DebExo,
+    this.FinExo,
+    this.TimbFis,
+    this.SectAct,
+    this.Commercial,
+    this.ModPai,
+    this.Encours,
+    this.EncoursBL,
+    this.Pass,
   });
 
   factory Client.fromXml(XmlElement node) {
     return Client(
       CodeClient: findText(node, 'CodeClient'),
       Raison: findText(node, 'Raison'),
-      Famille: findText(node, 'Famille'),
+      Famille: findInt(node, 'Famille'),
       Civilite: findText(node, 'Civilite'),
       Adresse: findText(node, 'Adresse'),
       Adresse_Suite: findText(node, 'Adresse_Suite'),
@@ -388,136 +169,26 @@ class Client {
       Fax: findText(node, 'Fax'),
       Email: findText(node, 'Email'),
       SiteWeb: findText(node, 'SiteWeb'),
-      Contact: findText(node, 'Contact'),
+      Contact: findInt(node, 'Contact'),
       Exonere: findBool(node, 'Exonere'),
       Majoration: findBool(node, 'Majoration'),
-      MF: findDouble(node, 'MF'),
-      Remise: findDouble(node, 'Remise'),
-      Banque: findText(node, 'Banque'),
+      MF: findText(node, 'MF'),
+      Remise: findInt(node, 'Remise'),
+      Banque: findInt(node, 'Banque'),
       AdresseBq: findText(node, 'AdresseBq'),
       CompteBq: findText(node, 'CompteBq'),
-      Compte: findText(node, 'Compte'),
-      CodeTarif: findText(node, 'CodeTarif'),
+      Compte: findInt(node, 'Compte'),
+      CodeTarif: findInt(node, 'CodeTarif'),
       TarifExp: findText(node, 'TarifExp'),
       DebExo: findDate(node, 'DebExo'),
       FinExo: findDate(node, 'FinExo'),
-      TimbFis: findDouble(node, 'TimbFis'),
-      SectAct: findText(node, 'SectAct'),
+      TimbFis: findBool(node, 'TimbFis'),
+      SectAct: findInt(node, 'SectAct'),
       Commercial: findText(node, 'Commercial'),
       ModPai: findText(node, 'ModPai'),
       Encours: findDouble(node, 'Encours'),
       EncoursBL: findDouble(node, 'EncoursBL'),
       Pass: findText(node, 'Pass'),
-      Code: findText(node, 'Code'),
-      Designation: findText(node, 'Designation'),
-      Maint: findText(node, 'Maint'),
-      Secteur: findText(node, 'Secteur'),
-      Famille1: findText(node, 'Famille1'),
-      Type: findText(node, 'Type'),
-      CoutArr: findDouble(node, 'CoutArr'),
-      NbArr: findInt(node, 'NbArr'),
-      PerArr: findText(node, 'PerArr'),
-      UnArr: findText(node, 'UnArr'),
-      Nature: findText(node, 'Nature'),
-      Compteur: findText(node, 'Compteur'),
-      Direction: findText(node, 'Direction'),
-      Service: findText(node, 'Service'),
-      Section: findText(node, 'Section'),
-      NumSerie: findText(node, 'NumSerie'),
-      NumModele: findText(node, 'NumModele'),
-      Fabricant: findText(node, 'Fabricant'),
-      DatAch: findDate(node, 'DatAch'),
-      DatSvc: findDate(node, 'DatSvc'),
-      CodFrn: findText(node, 'CodFrn'),
-      Fichier: findText(node, 'Fichier'),
-      Photo: findText(node, 'Photo'),
-      Prg: findText(node, 'Prg'),
-      LogUser: findText(node, 'LogUser'),
-      Technique: findText(node, 'Technique'),
-      Obs: findText(node, 'Obs'),
-      Agence: findText(node, 'Agence'),
-      Etage: findText(node, 'Etage'),
-      Bureau: findText(node, 'Bureau'),
-      Emplacement: findText(node, 'Emplacement'),
-      CodInv: findText(node, 'CodInv'),
-      Etat: findText(node, 'Etat'),
-      ClientRef: findText(node, 'Client'),
-      Entree: findDate(node, 'Entree'),
-      Ste: findText(node, 'Ste'),
-      QRCode: findText(node, 'QRCode'),
-      TxFct: findDouble(node, 'TxFct'),
-      CodeClient1: findText(node, 'CodeClient1'),
-      Raison1: findText(node, 'Raison1'),
-      Famille2: findText(node, 'Famille2'),
-      Civilite1: findText(node, 'Civilite1'),
-      Adresse1: findText(node, 'Adresse1'),
-      Adresse_Suite1: findText(node, 'Adresse_Suite1'),
-      CP1: findText(node, 'CP1'),
-      Gouvernorat1: findText(node, 'Gouvernorat1'),
-      Pays1: findText(node, 'Pays1'),
-      Tel11: findText(node, 'Tel11'),
-      Tel21: findText(node, 'Tel21'),
-      Fax1: findText(node, 'Fax1'),
-      Email1: findText(node, 'Email1'),
-      SiteWeb1: findText(node, 'SiteWeb1'),
-      Contact1: findText(node, 'Contact1'),
-      Exonere1: findBool(node, 'Exonere1'),
-      Majoration1: findBool(node, 'Majoration1'),
-      MF1: findDouble(node, 'MF1'),
-      Remise1: findDouble(node, 'Remise1'),
-      Banque1: findText(node, 'Banque1'),
-      AdresseBq1: findText(node, 'AdresseBq1'),
-      CompteBq1: findText(node, 'CompteBq1'),
-      Compte1: findText(node, 'Compte1'),
-      CodeTarif1: findText(node, 'CodeTarif1'),
-      TarifExp1: findDouble(node, 'TarifExp1'),
-      DebExo1: findDate(node, 'DebExo1'),
-      FinExo1: findDate(node, 'FinExo1'),
-      TimbFis1: findDouble(node, 'TimbFis1'),
-      SectAct1: findText(node, 'SectAct1'),
-      Commercial1: findText(node, 'Commercial1'),
-      ModPai1: findText(node, 'ModPai1'),
-      Encours1: findDouble(node, 'Encours1'),
-      EncoursBL1: findDouble(node, 'EncoursBL1'),
-      Pass1: findText(node, 'Pass1'),
-      Code1: findText(node, 'Code1'),
-      Designation1: findText(node, 'Designation1'),
-      Maint1: findText(node, 'Maint1'),
-      Secteur1: findText(node, 'Secteur1'),
-      Famille3: findText(node, 'Famille3'),
-      Type1: findText(node, 'Type1'),
-      CoutArr1: findDouble(node, 'CoutArr1'),
-      NbArr1: findInt(node, 'NbArr1'),
-      PerArr1: findText(node, 'PerArr1'),
-      UnArr1: findText(node, 'UnArr1'),
-      Nature1: findText(node, 'Nature1'),
-      Compteur1: findText(node, 'Compteur1'),
-      Direction1: findText(node, 'Direction1'),
-      Service1: findText(node, 'Service1'),
-      Section1: findText(node, 'Section1'),
-      NumSerie1: findText(node, 'NumSerie1'),
-      NumModele1: findText(node, 'NumModele1'),
-      Fabricant1: findText(node, 'Fabricant1'),
-      DatAch1: findDate(node, 'DatAch1'),
-      DatSvc1: findDate(node, 'DatSvc1'),
-      CodFrn1: findText(node, 'CodFrn1'),
-      Fichier1: findText(node, 'Fichier1'),
-      Photo1: findText(node, 'Photo1'),
-      Prg1: findText(node, 'Prg1'),
-      LogUser1: findText(node, 'LogUser1'),
-      Technique1: findText(node, 'Technique1'),
-      Obs1: findText(node, 'Obs1'),
-      Agence1: findText(node, 'Agence1'),
-      Etage1: findText(node, 'Etage1'),
-      Bureau1: findText(node, 'Bureau1'),
-      Emplacement1: findText(node, 'Emplacement1'),
-      CodInv1: findText(node, 'CodInv1'),
-      Etat1: findText(node, 'Etat1'),
-      Client1: findText(node, 'Client1'),
-      Entree1: findDate(node, 'Entree1'),
-      Ste1: findText(node, 'Ste1'),
-      QRCode1: findText(node, 'QRCode1'),
-      TxFct1: findDouble(node, 'TxFct1'),
     );
   }
 }
@@ -574,119 +245,122 @@ idREcl:findText(node, 'idREcl'),
 
 
 
-class Equipement {
-  final int Id;
-  final String Designation;
 
-  final int Ste;
-  final int Nature;
-  final int Depot;
-  final int Magasin;
-  final int Marque;
-  final String Famille;
-  final String Reference;
-  final String Info;
-  final String ArtRemp;
-  final String Unite;
-  final String GR;
-  final String CodeBarre;
-  final double PoidsBrut;
-  final double PoidsNet;
-  final double PrixA;
-  final double TVA;
-  final double PrixR;
-  final double PMP;
-  final double Volume;
-  final double Coefficient;
-  final double PrixV;
-  final double Remise;
-  final double Prix1;
-  final double Prix2;
-  final double Prix3;
-  final double Prix4;
-  final int QteIni;
-  final int QteDispo;
-  final int QteCmd;
-  final int QteCmdClt;
-  final int StockMin;
-  final int StockAlerte;
-  final bool TarifExp;
+class Equipement {
+  final int Code;
+  final String Designation;
+  final int? Maint;
+  final int? Secteur;
+  final int? Famille;
+  final int? Type;
+  final double? CoutArr;
+  final int? NbArr;
+  final int? PerArr;
+  final int? UnArr;
+  final int? Nature;
+  final int? Compteur;
+  final int? Direction;
+  final int? Service;
+  final int? Section;
+  final String? NumSerie;
+  final String? NumModele;
+  final String? Fabricant;
+  final DateTime? DatAch;
+  final DateTime? DatSvc;
+  final String? CodFrn;
+  final String? Fichier;
+  final String? Photo;
+  final int? Prg;
+  final String? LogUser;
+  final String? Technique;
+  final String? Obs;
+  final int? Agence;
+  final int? Etage;
+  final int? Bureau;
+  final String? Emplacement;
+  final String? CodInv;
+  final int? Etat;
+  final String? Client;
+  final int? Entree;
+  final int? Ste;
 
   Equipement({
-    required this.Id,
-    required this.Ste,
-    required this.Nature,
-    required this.Depot,
-    required this.Magasin,
-    required this.Marque,
-    required this.Designation,
-    required this.Famille,
-    required this.Volume,
-    required this.Info,
-    required this.ArtRemp,
-    required this.Unite,
-    required this.GR,
-    required this.CodeBarre,
-    required this.PoidsBrut,
-    required this.PoidsNet,
-    required this.PrixA,
-    required this.TVA,
-    required this.PrixR,
-    required this.PMP,
-    required this.Coefficient,
-    required this.PrixV,
-    required this.Remise,
-    required this.Prix1,
-    required this.Prix2,
-    required this.Prix3,
-    required this.Prix4,
-    required this.QteIni,
-    required this.QteDispo,
-    required this.QteCmd,
-    required this.QteCmdClt,
-    required this.StockMin,
-    required this.StockAlerte,
-    required this.TarifExp,
-    required this.Reference,
+   required this.Code,
+   required this.Designation,
+    this.Maint,
+    this.Secteur,
+    this.Famille,
+    this.Type,
+    this.CoutArr,
+    this.NbArr,
+    this.PerArr,
+    this.UnArr,
+    this.Nature,
+    this.Compteur,
+    this.Direction,
+    this.Service,
+    this.Section,
+    this.NumSerie,
+    this.NumModele,
+    this.Fabricant,
+    this.DatAch,
+    this.DatSvc,
+    this.CodFrn,
+    this.Fichier,
+    this.Photo,
+    this.Prg,
+    this.LogUser,
+    this.Technique,
+    this.Obs,
+    this.Agence,
+    this.Etage,
+    this.Bureau,
+    this.Emplacement,
+    this.CodInv,
+    this.Etat,
+    this.Client,
+    this.Entree,
+    this.Ste,
   });
 
   factory Equipement.fromXml(XmlElement node) {
     return Equipement(
-      Id: findInt(node, 'Id'),
-      Ste: findInt(node, 'Ste'),
-      Nature: findInt(node, 'Nature'),
-      Depot: findInt(node, 'Depot'),
-      Magasin: findInt(node, 'Magasin'),
-      Marque: findInt(node, 'Marque'),
+      Code: findInt(node, 'Code'),
       Designation: findText(node, 'Designation'),
-      Famille: findText(node, 'Famille'),
-      Reference:findText(node, 'Reference'),
-      Volume: findDouble(node, 'Volume'),
-      Info: findText(node, 'Info'),
-      ArtRemp: findText(node, 'ArtRemp'),
-      Unite: findText(node, 'Unite'),
-      GR: findText(node, 'GR'),
-      CodeBarre: findText(node, 'CodeBarre'),
-      PoidsBrut: findDouble(node, 'PoidsBrut'),
-      PoidsNet: findDouble(node, 'PoidsNet'),
-      PrixA: findDouble(node, 'PrixA'),
-      TVA: findDouble(node, 'TVA'),
-      PrixR: findDouble(node, 'PrixR'),
-      PMP: findDouble(node, 'PMP'),
-      Coefficient: findDouble(node, 'Coefficient'),
-      PrixV: findDouble(node, 'PrixV'),
-      Remise: findDouble(node, 'Remise'),
-      Prix1: findDouble(node, 'Prix1'),
-      Prix2: findDouble(node, 'Prix2'),
-      Prix3: findDouble(node, 'Prix3'),
-      Prix4: findDouble(node, 'Prix4'),
-      QteIni: findLong(node, 'QteIni'),
-      QteDispo: findLong(node, 'QteDispo'),
-      QteCmd: findLong(node, 'QteCmd'),
-      QteCmdClt: findLong(node, 'QteCmdClt'),
-      StockMin: findLong(node, 'StockMin'),
-      StockAlerte: findLong(node, 'StockAlerte'),
-      TarifExp: findBool(node, 'TarifExp'),
+      Maint: findInt(node, 'Maint'),
+      Secteur: findInt(node, 'Secteur'),
+      Famille: findInt(node, 'Famille'),
+      Type: findInt(node, 'Type'),
+      CoutArr: findDouble(node, 'CoutArr'),
+      NbArr: findInt(node, 'NbArr'),
+      PerArr: findInt(node, 'PerArr'),
+      UnArr: findInt(node, 'UnArr'),
+      Nature: findInt(node, 'Nature'),
+      Compteur: findInt(node, 'Compteur'),
+      Direction: findInt(node, 'Direction'),
+      Service: findInt(node, 'Service'),
+      Section: findInt(node, 'Section'),
+      NumSerie: findText(node, 'NumSerie'),
+      NumModele: findText(node, 'NumModele'),
+      Fabricant: findText(node, 'Fabricant'),
+      DatAch: findDate(node, 'DatAch'),
+      DatSvc: findDate(node, 'DatSvc'),
+      CodFrn: findText(node, 'CodFrn'),
+      Fichier: findText(node, 'Fichier'),
+      Photo: findText(node, 'Photo'),
+      Prg: findInt(node, 'Prg'),
+      LogUser: findText(node, 'LogUser'),
+      Technique: findText(node, 'Technique'),
+      Obs: findText(node, 'Obs'),
+      Agence: findInt(node, 'Agence'),
+      Etage: findInt(node, 'Etage'),
+      Bureau: findInt(node, 'Bureau'),
+      Emplacement: findText(node, 'Emplacement'),
+      CodInv: findText(node, 'CodInv'),
+      Etat: findInt(node, 'Etat'),
+      Client: findText(node, 'Client'),
+      Entree: findInt(node, 'Entree'),
+      Ste: findInt(node, 'Ste'),
     );
   }
 }

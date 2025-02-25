@@ -40,8 +40,9 @@ class _ReclamationPageState extends State<ReclamationPage> {
   Future<void> fetchEquipemnt() async {
     try {
       final response = await THttpHelper.get<Equipement>(
-        'GetPieceRechange',
+        'GetEqpClient',
         parseEquipement,
+         queryParameters: {'codeclient': '1'},
       );
       setState(() {
         equipements = response;
@@ -52,6 +53,8 @@ class _ReclamationPageState extends State<ReclamationPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erreur lors de la récupération des équipements")),
       );
+            print("Erreur lors de la récupération des équipements");
+
     }
   }
 
@@ -64,7 +67,7 @@ class _ReclamationPageState extends State<ReclamationPage> {
       });
 
       Map<String, String> body = {
-        'equipements': '7870',//_selectedEquipement ?? '',
+        'equipements': _selectedEquipement ?? '',
         'codeclient': CodeClient,
         'Rsm': _remarqueController.text,
         'description': _descriptionController.text,
@@ -128,7 +131,7 @@ class _ReclamationPageState extends State<ReclamationPage> {
                   children: [
                     _buildTextField(controller: _remarqueController, label: "Remarque", icon: Icons.comment),
                     _buildTextField(controller: _descriptionController, label: "Description", icon: Icons.description, maxLines: 3),
-                    _buildTextField(controller: _panneController, label: "Panne", icon: Icons.padding),
+                   // _buildTextField(controller: _panneController, label: "Panne", icon: Icons.padding),
 
                     if (equipements.isNotEmpty)
                       MultiSelectDialogField<Equipement>(
@@ -147,7 +150,7 @@ class _ReclamationPageState extends State<ReclamationPage> {
                         ),
                         onConfirm: (values) {
                           setState(() {
-                            _selectedEquipement = values.map((e) => e.Id.toString()).join(',');
+                            _selectedEquipement = values.map((e) => e.Code.toString()).join(',');
                             print("Équipements sélectionnés: $_selectedEquipement");
                           });
                         },
