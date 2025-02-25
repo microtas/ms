@@ -1,109 +1,132 @@
 import 'package:flutter/material.dart';
-import 'package:ms_maintain/classes.dart';
+import 'package:ms_maintain/API/HttpRequest.dart';
+import 'package:ms_maintain/API/classes.dart';
+import 'package:ms_maintain/API/paresXML.dart';
 
-class ReclamationDetailPage extends StatelessWidget {
+class ReclamationDetailPage extends StatefulWidget {
   final Reclamation reclamation;
 
   ReclamationDetailPage({required this.reclamation});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          "Détails de la Réclamation",
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-                iconTheme: IconThemeData(color: Colors.white),
+  State<ReclamationDetailPage> createState() => _ReclamationDetailPageState();
+}
 
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue[900]!, Colors.blue[700]!],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Titre principal
-            Text(
-              "Réclamation de ${reclamation.societe}",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[900],
+class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
+  final String codeClient = '1';
+
+  Future<Reclamation> fetchReclamation() async {
+    try {
+      final response = await THttpHelper.get<Reclamation>(
+        'GetLstRecl',
+        parseReclamation,
+        queryParameters: {'codeclient': codeClient},
+      );
+      if (response.isNotEmpty) {
+        return response.first; // Supposant que l'API renvoie une liste
+      } else {
+        throw Exception("Aucune donnée disponible.");
+      }
+    } catch (e) {
+      throw Exception("Erreur lors de l'appel de l'API : $e");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Reclamation>(
+      future: fetchReclamation(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Image.asset(
+                'assets/logo.png',
+                width: 400,
+                height: 200,
               ),
             ),
-            const SizedBox(height: 20),
-
-            // Section Remarque
-            _buildDetailRow(
-              icon: Icons.comment,
-              title: "Remarque",
-              content: reclamation.remarque,
-              iconColor: Colors.blue[900]!,
-              contentColor: Colors.black87,
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Text('Erreur: ${snapshot.error}'),
             ),
-            const Divider(height: 30, thickness: 1),
-
-            // Section Description
-            _buildDetailRow(
-              icon: Icons.description,
-              title: "Description",
-              content: reclamation.description,
-              iconColor: Colors.blue[900]!,
-              contentColor: Colors.black87,
+          );
+        } else if (!snapshot.hasData) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Text(
+                "Aucune donnée disponible.",
+                style: TextStyle(fontSize: 18, color: Colors.black),
+              ),
             ),
-            const Divider(height: 30, thickness: 1),
-
-            // Section Équipement
-            _buildDetailRow(
-              icon: Icons.device_hub,
-              title: "Équipement",
-              content: reclamation.equipement ?? 'Non spécifié',
-              iconColor: Colors.blue[900]!,
-              contentColor: Colors.black87,
+          );
+        } else {
+          final reclamation = snapshot.data!;
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              title: const Text(
+                "Détails de la Réclamation",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              centerTitle: true,
+              iconTheme: const IconThemeData(color: Colors.white),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.blue[900]!, Colors.blue[700]!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
             ),
-            const Divider(height: 30, thickness: 1),
-
-            // Section Panne
-            _buildDetailRow(
-              icon: Icons.error_outline,
-              title: "Panne",
-              content: reclamation.panne ?? 'Non spécifiée',
-              iconColor: Colors.blue[900]!,
-              contentColor: Colors.black87,
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow(
+                    icon: Icons.comment,
+                    title: "Remarque",
+                    content: reclamation.Resume,
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                  const Divider(height: 30, thickness: 1),
+                  _buildDetailRow(
+                    icon: Icons.description,
+                    title: "Description",
+                    content: reclamation.Description,
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                  const Divider(height: 30, thickness: 1),
+                  _buildDetailRow(
+                    icon: Icons.device_hub,
+                    title: "Équipement",
+                    content: reclamation.NumRcl,
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                ],
+              ),
             ),
-            const Divider(height: 30, thickness: 1),
-
-            // Section État
-            _buildDetailRow(
-              icon: Icons.info_outline,
-              title: "État",
-              content: _getEtatText(reclamation.etat),
-              iconColor: _getEtatColor(reclamation.etat),
-              contentColor: _getEtatColor(reclamation.etat),
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 
-  // Fonction pour créer une ligne de détail
   Widget _buildDetailRow({
     required IconData icon,
     required String title,
@@ -128,10 +151,8 @@ class ReclamationDetailPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Icône
           Icon(icon, color: iconColor, size: 28),
           const SizedBox(width: 16),
-          // Titre et contenu
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,22 +179,5 @@ class ReclamationDetailPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  // Fonction pour déterminer l'état de la réclamation
-  String _getEtatText(int etat) {
-    switch (etat) {
-      case 0: return "Demande soumise";
-      case 1: return "En cours de traitement";
-      default: return "État inconnu";
-    }
-  }
-
-  Color _getEtatColor(int etat) {
-    switch (etat) {
-      case 0: return Colors.red; // Rouge pour "Demande soumise"
-      case 1: return Colors.orange; // Orange pour "En cours de traitement"
-      default: return Colors.grey; // Gris pour "État inconnu"
-    }
   }
 }

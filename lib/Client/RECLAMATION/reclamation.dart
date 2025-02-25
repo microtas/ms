@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ms_maintain/classes.dart';
+import 'package:ms_maintain/API/HttpRequest.dart';
+import 'package:ms_maintain/API/classes.dart';
+import 'package:ms_maintain/API/paresXML.dart';
+import 'package:ms_maintain/Client/HomePage.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class ReclamationPage extends StatefulWidget {
   final Function(Reclamation) onReclamationAdded;
@@ -13,7 +18,6 @@ class ReclamationPage extends StatefulWidget {
 class _ReclamationPageState extends State<ReclamationPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String? _selectedSociete;
   String? _selectedEquipement;
   bool _showEquipementFields = false;
 
@@ -21,225 +25,157 @@ class _ReclamationPageState extends State<ReclamationPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _panneController = TextEditingController();
 
-  final List<String> _societes = ['Société A', 'Société B', 'Société C'];
-  final List<String> _equipements = ['Ordinateur', 'Imprimante', 'Scanner', 'Téléphone'];
-  final List<String> _selectedEquipements = []; // Liste d'équipements sélectionnés
+  bool _isLoading = false;
+  final String CodeClient = '1'; // Remplacez par le client actuel
+
+  List<Equipement> equipements = [];
+  List<Reclamation> reclamations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEquipemnt();
+  }
+
+  Future<void> fetchEquipemnt() async {
+    try {
+      final response = await THttpHelper.get<Equipement>(
+        'GetPieceRechange',
+        parseEquipement,
+      );
+      setState(() {
+        equipements = response;
+        print('Equipements récupérés: $equipements');
+      });
+    } catch (e) {
+      print("Erreur lors de l'appel de l'API : $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erreur lors de la récupération des équipements")),
+      );
+    }
+  }
+
+  Future<void> _submit() async {
+    if (_formKey.currentState!.validate()) {
+      bool allSuccess = true;
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      Map<String, String> body = {
+        'equipements': '7870',//_selectedEquipement ?? '',
+        'codeclient': CodeClient,
+        'Rsm': _remarqueController.text,
+        'description': _descriptionController.text,
+        'Obs': _panneController.text,
+      };
+      print(body);
+
+      try {
+        bool success = await THttpHelper.postBooleen(
+          'CreerReclamation',
+          body,
+          (response) {
+            return response;
+          },
+        );
+
+        if (!success) {
+          allSuccess = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erreur lors de l\'enregistrement de la réclamation')),
+          );
+        }
+
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Réclamation créée avec succès!')),
+          );
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyHomePage()),
+          );
+        }
+      } catch (e) {
+        allSuccess = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur lors de l\'envoi des données')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Réclamation", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("Réclamation"),
         backgroundColor: Colors.blue[900],
-        centerTitle: true,
-        iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Liste déroulante des sociétés
-                _buildDropdownField(
-                  label: "Choisir une société",
-                  value: _selectedSociete,
-                  items: _societes,
-                  icon: Icons.business,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedSociete = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                
-                // Champ Remarque
-                _buildTextField(
-                  controller: _remarqueController,
-                  label: "Remarque",
-                  icon: Icons.comment,
-                ),
-                const SizedBox(height: 20),
-                
-                // Champ Description
-                _buildTextField(
-                  controller: _descriptionController,
-                  label: "Description",
-                  icon: Icons.description,
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 20),
-                
-                // Bouton pour afficher les équipements
-                ElevatedButton.icon(
-                  onPressed: () {
-                    setState(() {
-                      _showEquipementFields = !_showEquipementFields;
-                    });
-                  },
-                  icon: Icon(
-                    _showEquipementFields ? Icons.remove_circle : Icons.add_circle,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    _showEquipementFields ? "Masquer Équipements" : "Ajouter un Équipement",
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[900],
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                
-                // Affichage conditionnel des champs équipements
-                if (_showEquipementFields) ...[
-                  _buildDropdownField(
-                    label: "Choisir un équipement",
-                    value: _selectedEquipement,
-                    items: _equipements,
-                    icon: Icons.devices_other,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null && !_selectedEquipements.contains(value)) {
-                          _selectedEquipements.add(value); // Ajouter un équipement à la liste
-                        }
-                        _selectedEquipement = null; // Réinitialiser la sélection
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  _buildTextField(
-                    controller: _panneController,
-                    label: "Description de la panne",
-                    icon: Icons.build,
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 20),
-                
-                  if (_selectedEquipements.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Équipements sélectionnés :",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        const SizedBox(height: 8),
-                        ..._selectedEquipements.map((equipement) {
-                          return ListTile(
-                            title: Text(equipement),
-                            trailing: IconButton(
-                              icon: Icon(Icons.remove_circle, color: Colors.red),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedEquipements.remove(equipement); // Supprimer l'équipement de la liste
-                                });
-                              },
-                            ),
-                          );
-                        }).toList(),
-                      ],
-                    ),
-                  const SizedBox(height: 20),
-                ],
-                
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Reclamation newReclamation = Reclamation(
-                          societe: _selectedSociete!,
-                          remarque: _remarqueController.text,
-                          description: _descriptionController.text,
-                          equipement: _selectedEquipements.isEmpty ? null : _selectedEquipements.join(", "), 
-                          panne: _panneController.text,
-                          etat: 0, 
-                        );
-                        
-                        widget.onReclamationAdded(newReclamation);
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    _buildTextField(controller: _remarqueController, label: "Remarque", icon: Icons.comment),
+                    _buildTextField(controller: _descriptionController, label: "Description", icon: Icons.description, maxLines: 3),
+                    _buildTextField(controller: _panneController, label: "Panne", icon: Icons.padding),
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Réclamation envoyée avec succès !")),
-                        );
+                    if (equipements.isNotEmpty)
+                      MultiSelectDialogField<Equipement>(
+                        items: equipements.map((equipement) => MultiSelectItem<Equipement>(equipement, equipement.Designation)).toList(),
+                        title: Text("Choisir des équipements"),
+                        selectedColor: Colors.blue[900],
+                        decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: Colors.blue, width: 2),
+                        ),
+                        buttonIcon: Icon(Icons.devices_other, color: Colors.blue[900]),
+                        buttonText: Text(
+                          "Sélectionner des équipements",
+                          style: TextStyle(color: Colors.blue[900], fontSize: 16),
+                        ),
+                        onConfirm: (values) {
+                          setState(() {
+                            _selectedEquipement = values.map((e) => e.Id.toString()).join(',');
+                            print("Équipements sélectionnés: $_selectedEquipement");
+                          });
+                        },
+                        validator: (values) => (values == null || values.isEmpty) ? "Veuillez choisir au moins un équipement" : null,
+                      ),
+                    _buildTextField(controller: _panneController, label: "Description de la panne", icon: Icons.build, maxLines: 3),
 
-                        Navigator.pop(context);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ElevatedButton(
+                      onPressed: _submit,
+                      child: const Text("Soumettre"),
                     ),
-                    child: const Text(
-                      "Soumettre",
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
-  // Fonction pour construire un champ de texte
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    int maxLines = 1,
-  }) {
+  Widget _buildTextField({required TextEditingController controller, required String label, required IconData icon, int maxLines = 1}) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: Colors.blue[900]),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color.fromARGB(255, 13, 71, 161), width: 2),
-          borderRadius: BorderRadius.circular(10),
-        ),
       ),
       maxLines: maxLines,
       validator: (value) => value!.isEmpty ? "Champ obligatoire" : null,
     );
   }
-
-  // Fonction pour construire un champ déroulant
-  Widget _buildDropdownField({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required IconData icon,
-    required ValueChanged<String?> onChanged,
-  }) {
-    return DropdownButtonFormField<String>(
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: Colors.blue[900]),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Color.fromARGB(255, 13, 71, 161), width: 2),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      value: value,
-      items: items.map((String item) {
-        return DropdownMenuItem(
-          value: item,
-          child: Text(item),
-        );
-      }).toList(),
-      onChanged: onChanged,
-      validator: (value) => value == null ? "Veuillez faire un choix" : null,
-    );
-  }
 }
- 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ms_maintain/API/classes.dart';
 import 'package:ms_maintain/Client/RECLAMATION/liste_reclamation.dart';
-import 'package:ms_maintain/classes.dart';
 import 'package:ms_maintain/Client/profil.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -13,10 +13,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> equipements = ["Ordinateur", "Imprimante", "Scanner", "Projecteur"];
   int _selectedIndex = 0;
 
-  int _countEnCours() {
+ /* int _countEnCours() {
     return reclamations.where((r) => r.etat == 1).length;
   }
-
+*/
   int _countEquipements() {
     return equipements.length;
   }
@@ -58,7 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            "${_countEnCours()}",
+                           // "${_countEnCours()}",
+                           "etat1111",
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
                           ),
                         ],

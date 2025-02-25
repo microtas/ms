@@ -43,3 +43,17 @@ List<Reclamation> parseReclamation(String xmlResponse) {
     return [];
   }
 }
+List<Equipement> parseEquipement(String xmlResponse) {
+  try {
+      // Parse the XML string into a document
+
+    final document = XmlDocument.parse(xmlResponse);
+      // Extract all `<Table>` elements (case-sensitive)
+    final tableElements = document.findAllElements('Table');
+      // Map each `<Table>` element to an `Emploi` object
+    return tableElements.map((node) =>Equipement.fromXml(node)).toList();
+  } catch (e) {
+    print('Erreur lors de l\'analyse du XML: $e');
+    return [];
+  }
+}

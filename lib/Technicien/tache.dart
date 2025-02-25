@@ -119,13 +119,7 @@ class _TaskPageState extends State<TaskPage> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Logic to add new task
-        },
-        backgroundColor: Colors.blue[900],
-        child: const Icon(Icons.add,color: Colors.white),
-      ),
+
     );
   }
 }

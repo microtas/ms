@@ -1,9 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
 import 'dart:convert';
 
-// Méthodes utilitaires pour extraire des valeurs sûres à partir de XML
-//Trouver la valeur texte associée à un tag XML spécifique.
 String findText(XmlElement node, String tagName, {String defaultValue = ''}) {
   final elements = node.findElements(tagName);
   return elements.isNotEmpty ? elements.single.text : defaultValue;
@@ -27,6 +27,12 @@ DateTime findDate(XmlElement node, String tagName, {DateTime? defaultValue}) {
   }
   return defaultValue ?? DateTime(1970, 1, 1);
 }
+int findLong(XmlElement node, String tagName, {int defaultValue = 0}) {
+  final elements = node.findElements(tagName);
+  return elements.isNotEmpty
+      ? int.tryParse(elements.single.text) ?? defaultValue
+      : defaultValue;
+}
 
 double findDouble(XmlElement node, String tagName) {
   final element = node.getElement(tagName);
@@ -35,6 +41,7 @@ double findDouble(XmlElement node, String tagName) {
   }
   throw ArgumentError('Missing or invalid <$tagName> in XML');
 }
+
 bool findBool(XmlElement node, String tagName, {bool defaultValue = false}) {
   final elements = node.findElements(tagName);
   return elements.isNotEmpty
@@ -515,97 +522,172 @@ class Client {
   }
 }
 
-
 class Reclamation{
-  final int Id;
-  final int Ste;
   final int Etat;
-  final int Id1;
-  final int Ste1;
-  final int Eqp;
-  final int Id2;
-  final int Ste2;
-  final int Etat1;
-  final int Id3;
-  final int Ste3;
-  final int Eqp1;
   final String NumRcl; 
   final String CodeClient;
   final String Resume; 
   final String Description;
-  final String NumRcl1;
-  final String Obs;
-  final String NumRcl2;
-  final String CodeClient1;
-  final String Resume1;
-  final String Description1;
-  final String NumRcl3;
-  final String Obs1;
   final DateTime Date;
   final DateTime HrEmi;
-  final DateTime Date1;
-  final DateTime HrEmi1;
+  final int Id;
+  final int Ste;
+  final String idREcl;
+  final int eqp;
+  final String obsequip;
+  final String NomSte;
+ 
   Reclamation({
-  required  this.Id,
-  required  this.Ste, 
   required  this.Etat, 
-  required  this.Id1, 
-  required  this.Ste1, 
-  required  this.Eqp, 
-  required  this.Id2, 
-  required  this.Ste2, 
-  required  this.Etat1, 
-  required  this.Id3, 
-  required  this.Ste3, 
-  required  this.Eqp1, 
   required  this.NumRcl, 
   required  this.CodeClient, 
   required  this.Resume, 
   required  this.Description, 
-  required  this.NumRcl1, 
-  required  this.Obs, 
-  required  this.NumRcl2, 
-  required  this.CodeClient1, 
-  required  this.Resume1, 
-  required  this.Description1, 
-  required  this.NumRcl3, 
-  required  this.Obs1, 
   required  this.Date, 
-  required  this.HrEmi, 
-  required  this.Date1, 
-  required  this.HrEmi1}
+  required  this.HrEmi,
+  required  this.Id,
+  required  this.Ste, 
+  required  this.idREcl, 
+  required this.eqp,
+  required this.obsequip,
+  required this.NomSte,
+ }
 
   );
 factory Reclamation.fromXml(XmlElement node) {
   return  Reclamation(
+
 Id:findInt(node, 'Id'),
 Ste:findInt(node, 'Ste'),
 Etat:findInt(node, 'Etat'),
-Id1:findInt(node, 'Id1'),
-Ste1:findInt(node, 'Ste1'),
-Eqp:findInt(node, 'Eqp'),
-Id2:findInt(node, 'Id2'),
-Ste2:findInt(node, 'Ste2'),
-Etat1:findInt(node, 'Etat1'),
-Id3:findInt(node, 'Id3'),
-Ste3:findInt(node, 'Ste3'),
-Eqp1:findInt(node, 'Eqp1'),
+eqp:findInt(node, 'eqp'),
 NumRcl: findText(node, 'NumRcl'),
 CodeClient: findText(node, 'CodeClient'),
 Resume: findText(node, 'Resume'),
 Description: findText(node, 'Description'),
-NumRcl1: findText(node, 'NumRcl1'),
-Obs: findText(node, 'Obs'), 
-NumRcl2: findText(node, 'NumRcl2'),
-CodeClient1: findText(node, 'CodeClient1'),
-Resume1: findText(node, 'Resume1'),
-Description1:findText(node, 'Description1'), 
-NumRcl3: findText(node, 'NumRcl3'), 
-Obs1: findText(node, 'Obs1'),
 Date: findDate(node, 'Date'), 
 HrEmi: findDate(node, 'HrEmi'),
-Date1: findDate(node, 'Date1'),
-HrEmi1: findDate(node, 'HrEmi1'),
+obsequip:findText(node, 'obsequip'), 
+NomSte:findText(node, 'NomSte'), 
+idREcl:findText(node, 'idREcl'),
 );}}
 
-  
+
+
+class Equipement {
+  final int Id;
+  final String Designation;
+
+  final int Ste;
+  final int Nature;
+  final int Depot;
+  final int Magasin;
+  final int Marque;
+  final String Famille;
+  final String Reference;
+  final String Info;
+  final String ArtRemp;
+  final String Unite;
+  final String GR;
+  final String CodeBarre;
+  final double PoidsBrut;
+  final double PoidsNet;
+  final double PrixA;
+  final double TVA;
+  final double PrixR;
+  final double PMP;
+  final double Volume;
+  final double Coefficient;
+  final double PrixV;
+  final double Remise;
+  final double Prix1;
+  final double Prix2;
+  final double Prix3;
+  final double Prix4;
+  final int QteIni;
+  final int QteDispo;
+  final int QteCmd;
+  final int QteCmdClt;
+  final int StockMin;
+  final int StockAlerte;
+  final bool TarifExp;
+
+  Equipement({
+    required this.Id,
+    required this.Ste,
+    required this.Nature,
+    required this.Depot,
+    required this.Magasin,
+    required this.Marque,
+    required this.Designation,
+    required this.Famille,
+    required this.Volume,
+    required this.Info,
+    required this.ArtRemp,
+    required this.Unite,
+    required this.GR,
+    required this.CodeBarre,
+    required this.PoidsBrut,
+    required this.PoidsNet,
+    required this.PrixA,
+    required this.TVA,
+    required this.PrixR,
+    required this.PMP,
+    required this.Coefficient,
+    required this.PrixV,
+    required this.Remise,
+    required this.Prix1,
+    required this.Prix2,
+    required this.Prix3,
+    required this.Prix4,
+    required this.QteIni,
+    required this.QteDispo,
+    required this.QteCmd,
+    required this.QteCmdClt,
+    required this.StockMin,
+    required this.StockAlerte,
+    required this.TarifExp,
+    required this.Reference,
+  });
+
+  factory Equipement.fromXml(XmlElement node) {
+    return Equipement(
+      Id: findInt(node, 'Id'),
+      Ste: findInt(node, 'Ste'),
+      Nature: findInt(node, 'Nature'),
+      Depot: findInt(node, 'Depot'),
+      Magasin: findInt(node, 'Magasin'),
+      Marque: findInt(node, 'Marque'),
+      Designation: findText(node, 'Designation'),
+      Famille: findText(node, 'Famille'),
+      Reference:findText(node, 'Reference'),
+      Volume: findDouble(node, 'Volume'),
+      Info: findText(node, 'Info'),
+      ArtRemp: findText(node, 'ArtRemp'),
+      Unite: findText(node, 'Unite'),
+      GR: findText(node, 'GR'),
+      CodeBarre: findText(node, 'CodeBarre'),
+      PoidsBrut: findDouble(node, 'PoidsBrut'),
+      PoidsNet: findDouble(node, 'PoidsNet'),
+      PrixA: findDouble(node, 'PrixA'),
+      TVA: findDouble(node, 'TVA'),
+      PrixR: findDouble(node, 'PrixR'),
+      PMP: findDouble(node, 'PMP'),
+      Coefficient: findDouble(node, 'Coefficient'),
+      PrixV: findDouble(node, 'PrixV'),
+      Remise: findDouble(node, 'Remise'),
+      Prix1: findDouble(node, 'Prix1'),
+      Prix2: findDouble(node, 'Prix2'),
+      Prix3: findDouble(node, 'Prix3'),
+      Prix4: findDouble(node, 'Prix4'),
+      QteIni: findLong(node, 'QteIni'),
+      QteDispo: findLong(node, 'QteDispo'),
+      QteCmd: findLong(node, 'QteCmd'),
+      QteCmdClt: findLong(node, 'QteCmdClt'),
+      StockMin: findLong(node, 'StockMin'),
+      StockAlerte: findLong(node, 'StockAlerte'),
+      TarifExp: findBool(node, 'TarifExp'),
+    );
+  }
+}
+
