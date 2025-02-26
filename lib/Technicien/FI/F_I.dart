@@ -13,7 +13,8 @@ class InterventionFormPage extends StatefulWidget {
 
 class _InterventionFormPageState extends State<InterventionFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _taskDescriptionController = TextEditingController();
+  final TextEditingController _taskDescriptionController =
+      TextEditingController();
 
   List<String> equipmentList = [
     'Équipement 1',
@@ -31,8 +32,10 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
 
     // Si une intervention existante est passée, initialiser les champs
     if (widget.existingIntervention != null) {
-      _taskDescriptionController.text = widget.existingIntervention?['taskDescription'] ?? '';
-      _selectedEquipments = (widget.existingIntervention?['equipments'] ?? '').split(', ');
+      _taskDescriptionController.text =
+          widget.existingIntervention?['taskDescription'] ?? '';
+      _selectedEquipments =
+          (widget.existingIntervention?['equipments'] ?? '').split(', ');
     }
   }
 
@@ -57,8 +60,11 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          widget.existingIntervention == null ? 'Créer une Fiche d\'Intervention' : 'Modifier la Fiche d\'Intervention',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          widget.existingIntervention == null
+              ? 'Créer une Fiche d\'Intervention'
+              : 'Modifier la Fiche d\'Intervention',
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue[900],
         iconTheme: IconThemeData(color: Colors.white),
@@ -71,8 +77,13 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.existingIntervention == null ? 'Créer une Fiche d\'Intervention' : 'Modifier une Fiche d\'Intervention',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+                widget.existingIntervention == null
+                    ? 'Créer une Fiche d\'Intervention'
+                    : 'Modifier une Fiche d\'Intervention',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900]),
               ),
               SizedBox(height: 20),
 
@@ -84,11 +95,13 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
                   labelStyle: TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(color: const Color.fromARGB(255, 13, 71, 161)),
+                    borderSide: BorderSide(
+                        color: const Color.fromARGB(255, 13, 71, 161)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
-                    borderSide: BorderSide(color: Color.fromARGB(255, 13, 71, 161)),
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 13, 71, 161)),
                   ),
                   prefixIcon: Icon(Icons.description, color: Colors.amber[600]),
                 ),
@@ -99,32 +112,38 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),  // Espacement plus important
+              SizedBox(height: 20), // Espacement plus important
 
               // Équipements utilisés
               Text(
                 'Équipements utilisés',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue[900]),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[900]),
               ),
               SizedBox(height: 10),
               MultiSelectDialogField(
                 items: equipmentList
-                    .map((equipment) => MultiSelectItem<String>(equipment, equipment))
+                    .map((equipment) =>
+                        MultiSelectItem<String>(equipment, equipment))
                     .toList(),
-                title: Text("Sélectionnez des équipements", style: TextStyle(color: Colors.blue[900])),
+                title: Text("Sélectionnez des équipements",
+                    style: TextStyle(color: Colors.blue[900])),
                 selectedColor: Colors.amber[600],
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   border: Border.all(color: Colors.grey),
                 ),
-                buttonText: Text("Sélectionner des équipements", style: TextStyle(color: Colors.grey)),
+                buttonText: Text("Sélectionner des équipements",
+                    style: TextStyle(color: Colors.grey)),
                 onConfirm: (results) {
                   setState(() {
                     _selectedEquipments = List<String>.from(results);
                   });
                 },
               ),
-              SizedBox(height: 30),  // Espacement plus important
+              SizedBox(height: 30), // Espacement plus important
 
               // Utilisation de Spacer pour pousser le bouton en bas
               Expanded(child: SizedBox()),
@@ -139,7 +158,8 @@ class _InterventionFormPageState extends State<InterventionFormPage> {
                     textStyle: TextStyle(fontSize: 16),
                     elevation: 3, // Effet de profondeur subtile
                   ),
-                  child: Text('Soumettre', style: TextStyle(color: Colors.white)),
+                  child:
+                      Text('Soumettre', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],

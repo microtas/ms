@@ -8,11 +8,11 @@ class FicheInterventionListPage extends StatefulWidget {
   FicheInterventionListPage({required this.interventions});
 
   @override
-  _FicheInterventionListPageState createState() => _FicheInterventionListPageState();
+  _FicheInterventionListPageState createState() =>
+      _FicheInterventionListPageState();
 }
 
 class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
-
   void _addIntervention(Map<String, String> newIntervention) {
     setState(() {
       widget.interventions.add(newIntervention);
@@ -28,16 +28,17 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
 
   void _deleteIntervention(int index) {
     setState(() {
-      widget.interventions.removeAt(index); // Supprime l'élément à l'index donné
+      widget.interventions
+          .removeAt(index); 
     });
   }
 
   Color _getCardColor(String state) {
     switch (state) {
       case '0':
-        return Colors.white; 
+        return Colors.white;
       case '1':
-        return Colors.grey[300] ?? Colors.grey; 
+        return Colors.grey[300] ?? Colors.grey;
       default:
         return Colors.white;
     }
@@ -48,7 +49,11 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Liste des Fiches d\'Intervention', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+        title: const Text('Liste des Fiches d\'Intervention',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 20)),
         backgroundColor: Colors.blue[900],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -68,17 +73,19 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                       itemCount: widget.interventions.length,
                       itemBuilder: (context, index) {
                         final intervention = widget.interventions[index];
-                        final state = intervention['state'] ?? '0'; // Par défaut à 0
+                        final state =
+                            intervention['state'] ?? '0'; // Par défaut à 0
 
                         return GestureDetector(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => InterventionDetailsPage(intervention: intervention),
-      ),
-    );
-  },
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InterventionDetailsPage(
+                                    intervention: intervention),
+                              ),
+                            );
+                          },
                           child: Card(
                             margin: const EdgeInsets.symmetric(vertical: 10),
                             shape: RoundedRectangleBorder(
@@ -92,12 +99,14 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                 children: [
                                   CircleAvatar(
                                     backgroundColor: Colors.amber[600],
-                                    child: const Icon(Icons.work, color: Colors.white),
+                                    child: const Icon(Icons.work,
+                                        color: Colors.white),
                                   ),
                                   const SizedBox(width: 15),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Tâche: ${intervention['taskDescription']}',
@@ -131,26 +140,34 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                                     Row(
                                       children: [
                                         IconButton(
-                                          icon: const Icon(Icons.edit, color: Colors.blue),
+                                          icon: const Icon(Icons.edit,
+                                              color: Colors.blue),
                                           onPressed: () async {
                                             // Modifier l'intervention
-                                            final updatedIntervention = await Navigator.push<Map<String, String>>(
+                                            final updatedIntervention =
+                                                await Navigator.push<
+                                                    Map<String, String>>(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => InterventionFormPage(
-                                                  existingIntervention: intervention,
+                                                builder: (context) =>
+                                                    InterventionFormPage(
+                                                  existingIntervention:
+                                                      intervention,
                                                 ),
                                               ),
                                             );
-                          
-                                     if (updatedIntervention != null) {
-                                              _editIntervention(index, updatedIntervention);
+
+                                            if (updatedIntervention != null) {
+                                              _editIntervention(
+                                                  index, updatedIntervention);
                                             }
-                                                 },
+                                          },
                                         ),
                                         IconButton(
-                                          icon: const Icon(Icons.delete, color: Colors.red),
-                                          onPressed: () => _deleteIntervention(index),
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.red),
+                                          onPressed: () =>
+                                              _deleteIntervention(index),
                                         ),
                                       ],
                                     ),

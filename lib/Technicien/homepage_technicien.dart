@@ -13,7 +13,7 @@ class HomePageTechnicien extends StatelessWidget {
       appBar: AppBar(
         title: Text('Accueil Technicien',
             style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold)),
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 28)),
         centerTitle: true,
         backgroundColor: Colors.blue[900],
         elevation: 0,
@@ -32,18 +32,22 @@ class HomePageTechnicien extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // Pour éviter le débordement, un SingleChildScrollView peut être utilisé
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 1,
+              child: SingleChildScrollView(
+                child: GridView.builder(
+                  shrinkWrap: true, // Ajouté pour ne pas affecter la taille globale
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20,
+                    childAspectRatio: 1,
+                  ),
+                  itemCount: _menuItems.length,
+                  itemBuilder: (context, index) {
+                    return _buildMenuButton(context, _menuItems[index]);
+                  },
                 ),
-                itemCount: _menuItems.length,
-                itemBuilder: (context, index) {
-                  return _buildMenuButton(context, _menuItems[index]);
-                },
               ),
             ),
           ],
