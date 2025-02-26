@@ -3,7 +3,7 @@ import 'package:ms_maintain/Technicien/FI/liste_F_I.dart';
 import 'package:ms_maintain/Technicien/Plannig.dart';
 import 'package:ms_maintain/Technicien/ordre%20de%20travail/ordretache.dart';
 import 'package:ms_maintain/Technicien/profiltech.dart';
-import 'package:ms_maintain/Technicien/tache.dart';
+import 'package:ms_maintain/Technicien/tache/tache.dart';
 
 class HomePageTechnicien extends StatelessWidget {
   @override

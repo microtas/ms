@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ms_maintain/Technicien/FI/F_I.dart';
+import 'package:ms_maintain/Technicien/FI/detaillesFI.dart';
 
 class FicheInterventionListPage extends StatefulWidget {
   final List<Map<String, String>> interventions;
@@ -69,82 +70,92 @@ class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
                         final intervention = widget.interventions[index];
                         final state = intervention['state'] ?? '0'; // Par défaut à 0
 
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          color: _getCardColor(state),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  backgroundColor: Colors.amber[600],
-                                  child: const Icon(Icons.work, color: Colors.white),
-                                ),
-                                const SizedBox(width: 15),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Tâche: ${intervention['taskDescription']}',
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        'Équipements: ${intervention['equipments']}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        'Date: ${intervention['date'] ?? 'Non spécifiée'}',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[700],
-                                        ),
-                                      ),
-                                    ],
+                        return GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InterventionDetailsPage(intervention: intervention),
+      ),
+    );
+  },
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            elevation: 5,
+                            color: _getCardColor(state),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.amber[600],
+                                    child: const Icon(Icons.work, color: Colors.white),
                                   ),
-                                ),
-                                // Icône pour supprimer l'intervention
-                                if (state == '0')
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit, color: Colors.blue),
-                                        onPressed: () async {
-                                          // Modifier l'intervention
-                                          final updatedIntervention = await Navigator.push<Map<String, String>>(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => InterventionFormPage(
-                                                existingIntervention: intervention,
+                                  const SizedBox(width: 15),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Tâche: ${intervention['taskDescription']}',
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          'Équipements: ${intervention['equipments']}',
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          'Date: ${intervention['date'] ?? 'Non spécifiée'}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[700],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // Icône pour supprimer l'intervention
+                                  if (state == '0')
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit, color: Colors.blue),
+                                          onPressed: () async {
+                                            // Modifier l'intervention
+                                            final updatedIntervention = await Navigator.push<Map<String, String>>(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => InterventionFormPage(
+                                                  existingIntervention: intervention,
+                                                ),
                                               ),
-                                            ),
-                                          );
-
-                                   if (updatedIntervention != null) {
-                                            _editIntervention(index, updatedIntervention);
-                                          }
-                                               },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete, color: Colors.red),
-                                        onPressed: () => _deleteIntervention(index),
-                                      ),
-                                    ],
-                                  ),
-                              ],
+                                            );
+                          
+                                     if (updatedIntervention != null) {
+                                              _editIntervention(index, updatedIntervention);
+                                            }
+                                                 },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete, color: Colors.red),
+                                          onPressed: () => _deleteIntervention(index),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
                             ),
                           ),
                         );

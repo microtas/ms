@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ms_maintain/Technicien/tache/TaskDetailPage.dart';
 
 class TaskPage extends StatefulWidget {
   @override
@@ -41,11 +42,23 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
+  //---------PAGE DETAILLES
+  void _viewTaskDetails(int taskId) {
+    final task = tasks.firstWhere((task) => task['id'] == taskId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TacheDetailPage(task: task),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Gestion des Tâches', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Colors.white)),
+        title: const Text('Gestion des Tâches', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.blue[900],
         elevation: 10,
@@ -58,6 +71,7 @@ class _TaskPageState extends State<TaskPage> {
           itemBuilder: (context, index) {
             final task = tasks[index];
             return Card(
+              color: Colors.white,
               margin: const EdgeInsets.symmetric(vertical: 12),
               elevation: 5,
               shape: RoundedRectangleBorder(
@@ -81,26 +95,43 @@ class _TaskPageState extends State<TaskPage> {
                       ],
                     ),
                     const SizedBox(height: 15),
-                    if (!task['isAccepted'] && !task['isCompleted'])
-                      ElevatedButton(
-                        onPressed: () => _acceptTask(task['id']),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow[700],
-                          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    //--------- Les boutons sur la même ligne
+                    Row(
+                      children: [
+                        if (!task['isAccepted'] && !task['isCompleted'])
+                          ElevatedButton(
+                            onPressed: () => _acceptTask(task['id']),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow[700],
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
+                            child: const Text('Accepter', style: TextStyle(fontSize: 18, color: Colors.white)),
+                          ),
+                        const SizedBox(width: 10),
+                        ElevatedButton(
+                          onPressed: () => _viewTaskDetails(task['id']),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green[700],
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          child: const Text('Description', style: TextStyle(fontSize: 18, color: Colors.white)),
                         ),
-                        child: const Text('Accepter', style: TextStyle(fontSize: 18, color: Colors.white)),
-                      ),
-                    if (task['isAccepted'] && !task['isCompleted'])
-                      ElevatedButton(
-                        onPressed: () => _completeTask(task['id']),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[700],
-                          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                        child: const Text('Terminer', style: TextStyle(fontSize: 18, color: Colors.white)),
-                      ),
+                        if (task['isAccepted'] && !task['isCompleted'])
+                          const SizedBox(width: 10),
+                        if (task['isAccepted'] && !task['isCompleted'])
+                          ElevatedButton(
+                            onPressed: () => _completeTask(task['id']),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red[700],
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
+                            child: const Text('Terminer', style: TextStyle(fontSize: 18, color: Colors.white)),
+                          ),
+                      ],
+                    ),
                     if (task['isCompleted'])
                       Row(
                         children: [
@@ -119,7 +150,6 @@ class _TaskPageState extends State<TaskPage> {
           },
         ),
       ),
-
     );
   }
 }
