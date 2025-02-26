@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ms_maintain/API/HttpRequest.dart';
 import 'package:ms_maintain/API/classes.dart';
 import 'package:ms_maintain/API/paresXML.dart';
+import 'package:ms_maintain/API/user.dart';
 import 'package:ms_maintain/Client/RECLAMATION/detailsreclamation.dart';
 import 'package:ms_maintain/Client/RECLAMATION/reclamation.dart';
 
@@ -17,6 +18,7 @@ class ListeReclamation extends StatefulWidget {
 class _ListeReclamationState extends State<ListeReclamation> {
   List<Reclamation> reclamations = [];
   bool isLoading = true; // Variable pour gérer l'état de chargement
+  final String codeclient = CurrentUser.loggedInClient!.CodeClient;
 
   @override
   void initState() {
@@ -57,6 +59,7 @@ class _ListeReclamationState extends State<ListeReclamation> {
   }
 
   Future<void> fetchReclamation() async {
+    
     setState(() {
       isLoading = true;  // Affiche le cercle de chargement avant la récupération des données
     });
@@ -65,7 +68,7 @@ class _ListeReclamationState extends State<ListeReclamation> {
       final response = await THttpHelper.get<Reclamation>(
         'GetLstRecl',
         parseReclamation,
-        queryParameters: {'codeclient': '1'},
+        queryParameters: {'codeclient': codeclient},
       );
       setState(() {
         reclamations = response;
@@ -145,14 +148,14 @@ class _ListeReclamationState extends State<ListeReclamation> {
                                 child: const Icon(Icons.business, color: Colors.white),
                               ),
                               title: Text(
-                                "SOCITE",
+                               reclamation.NomSte,
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue[900]),
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    reclamation.Resume,
+                                    reclamation.NumRcl,
                                     style: const TextStyle(color: Colors.black87),
                                   ),
                                   const SizedBox(height: 8),

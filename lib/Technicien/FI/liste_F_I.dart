@@ -11,7 +11,7 @@ class FicheInterventionListPage extends StatefulWidget {
 }
 
 class _FicheInterventionListPageState extends State<FicheInterventionListPage> {
-  // Méthode pour ajouter une nouvelle intervention à la liste
+
   void _addIntervention(Map<String, String> newIntervention) {
     setState(() {
       widget.interventions.add(newIntervention);

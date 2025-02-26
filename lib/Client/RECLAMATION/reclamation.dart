@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ms_maintain/API/HttpRequest.dart';
 import 'package:ms_maintain/API/classes.dart';
 import 'package:ms_maintain/API/paresXML.dart';
+import 'package:ms_maintain/API/user.dart';
 import 'package:ms_maintain/Client/HomePage.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
@@ -26,7 +27,7 @@ class _ReclamationPageState extends State<ReclamationPage> {
   final TextEditingController _panneController = TextEditingController();
 
   bool _isLoading = false;
-  final String CodeClient = '1';
+  final String CodeClient =  CurrentUser.loggedInClient!.CodeClient;
 
   List<Equipement> equipements = [];
   List<Reclamation> reclamations = [];

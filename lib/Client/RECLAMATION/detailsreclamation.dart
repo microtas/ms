@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ms_maintain/API/HttpRequest.dart';
 import 'package:ms_maintain/API/classes.dart';
 import 'package:ms_maintain/API/paresXML.dart';
+import 'package:intl/intl.dart';
+import 'package:ms_maintain/API/user.dart';
+
 
 class ReclamationDetailPage extends StatefulWidget {
   final Reclamation reclamation;
@@ -13,17 +16,18 @@ class ReclamationDetailPage extends StatefulWidget {
 }
 
 class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
-  final String codeClient = '1';
+  final String codeclient = CurrentUser.loggedInClient!.CodeClient;
 
   Future<Reclamation> fetchReclamation() async {
     try {
       final response = await THttpHelper.get<Reclamation>(
         'GetLstRecl',
         parseReclamation,
-        queryParameters: {'codeclient': codeClient},
+        queryParameters: {'codeclient': codeclient},
       );
       if (response.isNotEmpty) {
         return response.first; // Supposant que l'API renvoie une liste
+        
       } else {
         throw Exception("Aucune donnée disponible.");
       }
@@ -41,8 +45,8 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
           return Scaffold(
             backgroundColor: Colors.white,
             body: Center(
-              child: Image.asset(
-                'assets/logo.png',
+              child:  Image.asset(
+                'assets/logo.png', // Affiche le gif de chargement
                 width: 400,
                 height: 200,
               ),
@@ -52,7 +56,10 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
           return Scaffold(
             backgroundColor: Colors.white,
             body: Center(
-              child: Text('Erreur: ${snapshot.error}'),
+              child: Text(
+                'Erreur: ${snapshot.error}',
+                style: TextStyle(color: Colors.red, fontSize: 18),
+              ),
             ),
           );
         } else if (!snapshot.hasData) {
@@ -67,6 +74,7 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
           );
         } else {
           final reclamation = snapshot.data!;
+          print(reclamation.HrEmi);
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -91,10 +99,44 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
               ),
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildDetailRow(
+                    icon: Icons.business,
+                    title: "Nom de société",
+                    content: reclamation.NomSte,
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                  const Divider(height: 24, thickness: 1),
+                  _buildDetailRow(
+                    icon: Icons.calendar_today,
+                    title: "Date",
+content: reclamation.Date,
+                    
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                  
+                  const Divider(height: 24, thickness: 1),
+                  _buildDetailRow(
+                    icon: Icons.access_time,
+                    title: "Heure",
+                    content: reclamation.HrEmi,
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                  const Divider(height: 24, thickness: 1),
+                  _buildDetailRow(
+                    icon: Icons.confirmation_number,
+                    title: "Numéro de Réclamation",
+                    content: reclamation.NumRcl,
+                    iconColor: Colors.blue[900]!,
+                    contentColor: Colors.black87,
+                  ),
+                  const Divider(height: 24, thickness: 1),
                   _buildDetailRow(
                     icon: Icons.comment,
                     title: "Remarque",
@@ -102,7 +144,7 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
                     iconColor: Colors.blue[900]!,
                     contentColor: Colors.black87,
                   ),
-                  const Divider(height: 30, thickness: 1),
+                  const Divider(height: 24, thickness: 1),
                   _buildDetailRow(
                     icon: Icons.description,
                     title: "Description",
@@ -110,11 +152,11 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
                     iconColor: Colors.blue[900]!,
                     contentColor: Colors.black87,
                   ),
-                  const Divider(height: 30, thickness: 1),
+                  const Divider(height: 24, thickness: 1),
                   _buildDetailRow(
-                    icon: Icons.device_hub,
-                    title: "Équipement",
-                    content: reclamation.NumRcl,
+                    icon: Icons.visibility,
+                    title: "Observation des Équipements",
+                    content: reclamation.obsequip,
                     iconColor: Colors.blue[900]!,
                     contentColor: Colors.black87,
                   ),
@@ -127,57 +169,70 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
     );
   }
 
-  Widget _buildDetailRow({
-    required IconData icon,
-    required String title,
-    required String content,
-    required Color iconColor,
-    required Color contentColor,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.only(bottom: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: iconColor, size: 28),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: iconColor,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  content,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: contentColor,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+ Widget _buildDetailRow({
+  required IconData icon,
+  required String title,
+  required dynamic content,  
+  required Color iconColor,
+  required Color contentColor,
+}) {
+  String displayContent;
+
+  if (content is DateTime) {
+    if (title == "Heure") {
+      displayContent = DateFormat('HH:mm').format(content); 
+    } else {
+      displayContent = DateFormat('dd/MM/yyyy').format(content);  
+    }
+  } else {
+    displayContent = content.toString();
   }
+
+  return Container(
+    padding: const EdgeInsets.all(16.0),
+    margin: const EdgeInsets.only(bottom: 16.0),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 6,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: iconColor, size: 28),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: iconColor,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                displayContent, // Affichage du contenu (formaté)
+                style: TextStyle(
+                  fontSize: 16,
+                  color: contentColor,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }

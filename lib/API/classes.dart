@@ -81,76 +81,76 @@ class User{
 }
 
 class Client {
-  final String? CodeClient;
-  final String? Raison;
-  final int? Famille;
-  final String? Civilite;
-  final String? Adresse;
-  final String? Adresse_Suite;
-  final String? CP;
-  final String? Gouvernorat;
-  final String? Pays;
-  final String? Tel1;
-  final String? Tel2;
-  final String? Fax;
-  final String? Email;
-  final String? SiteWeb;
-  final int? Contact;
-  final bool? Exonere;
-  final bool? Majoration;
-  final String? MF;
-  final int? Remise;
-  final int? Banque;
-  final String? AdresseBq;
-  final String? CompteBq;
-  final int? Compte;
-  final int? CodeTarif;
-  final String? TarifExp;
-  final DateTime? DebExo;
-  final DateTime? FinExo;
-  final bool? TimbFis;
-  final int? SectAct;
-  final String? Commercial;
-  final String? ModPai;
-  final double? Encours;
-  final double? EncoursBL;
-  final String? Pass;
+  final String CodeClient;
+  final String Raison;
+  final int Famille;
+  final String Civilite;
+  final String Adresse;
+  final String Adresse_Suite;
+  final String CP;
+  final String Gouvernorat;
+  final String Pays;
+  final String Tel1;
+  final String Tel2;
+  final String Fax;
+  final String Email;
+  final String SiteWeb;
+  final int Contact;
+  final bool Exonere;
+  final bool Majoration;
+  final String MF;
+  final int Remise;
+  final int Banque;
+  final String AdresseBq;
+  final String CompteBq;
+  final int Compte;
+  final int CodeTarif;
+  final String TarifExp;
+  final DateTime DebExo;
+  final DateTime FinExo;
+  final bool TimbFis;
+  final int SectAct;
+  final String Commercial;
+  final String ModPai;
+  final double Encours;
+  final double EncoursBL;
+  final String Pass;
 
   Client({
-    this.CodeClient,
-    this.Raison,
-    this.Famille,
-    this.Civilite,
-    this.Adresse,
-    this.Adresse_Suite,
-    this.CP,
-    this.Gouvernorat,
-    this.Pays,
-    this.Tel1,
-    this.Tel2,
-    this.Fax,
-    this.Email,
-    this.SiteWeb,
-    this.Contact,
-    this.Exonere,
-    this.Majoration,
-    this.MF,
-    this.Remise,
-    this.Banque,
-    this.AdresseBq,
-    this.CompteBq,
-    this.Compte,
-    this.CodeTarif,
-    this.TarifExp,
-    this.DebExo,
-    this.FinExo,
-    this.TimbFis,
-    this.SectAct,
-    this.Commercial,
-    this.ModPai,
-    this.Encours,
-    this.EncoursBL,
-    this.Pass,
+  required this.CodeClient,
+  required  this.Raison,
+  required  this.Famille,
+  required  this.Civilite,
+  required  this.Adresse,
+  required  this.Adresse_Suite,
+  required  this.CP,
+  required  this.Gouvernorat,
+  required  this.Pays,
+  required  this.Tel1,
+  required  this.Tel2,
+  required  this.Fax,
+  required  this.Email,
+  required  this.SiteWeb,
+  required  this.Contact,
+  required  this.Exonere,
+  required  this.Majoration,
+  required  this.MF,
+  required  this.Remise,
+  required  this.Banque,
+  required  this.AdresseBq,
+  required  this.CompteBq,
+  required  this.Compte,
+  required  this.CodeTarif,
+  required  this.TarifExp,
+  required  this.DebExo,
+  required  this.FinExo,
+  required  this.TimbFis,
+  required  this.SectAct,
+  required  this.Commercial,
+  required  this.ModPai,
+  required  this.Encours,
+  required  this.EncoursBL,
+  required  this.Pass,
   });
 
   factory Client.fromXml(XmlElement node) {
@@ -195,18 +195,22 @@ class Client {
 
 class Reclamation{
   final int Etat;
+  final int eqp;
+  final int Id;
+  final int Ste;
+  final String idREcl;
+  final String obsequip;
+  final String NomSte;
   final String NumRcl; 
   final String CodeClient;
   final String Resume; 
   final String Description;
   final DateTime Date;
   final DateTime HrEmi;
-  final int Id;
-  final int Ste;
-  final String idREcl;
-  final int eqp;
-  final String obsequip;
-  final String NomSte;
+    
+
+
+
  
   Reclamation({
   required  this.Etat, 

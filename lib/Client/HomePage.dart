@@ -1,5 +1,9 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:ms_maintain/API/HttpRequest.dart';
 import 'package:ms_maintain/API/classes.dart';
+import 'package:ms_maintain/API/paresXML.dart';
+import 'package:ms_maintain/API/user.dart';
 import 'package:ms_maintain/Client/RECLAMATION/liste_reclamation.dart';
 import 'package:ms_maintain/Client/profil.dart';
 
@@ -10,22 +14,63 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Reclamation> reclamations = [];
-  List<String> equipements = ["Ordinateur", "Imprimante", "Scanner", "Projecteur"];
   int _selectedIndex = 0;
+  bool isLoading = true; 
+  final codeclient =  CurrentUser.loggedInClient!.CodeClient;
 
- /* int _countEnCours() {
-    return reclamations.where((r) => r.etat == 1).length;
+  int _countEnCours() {
+    return reclamations.where((r) => r.Etat == 1).length;
   }
-*/
-  int _countEquipements() {
-    return equipements.length;
+
+Future<void> fetchReclamation() async {
+    setState(() {
+      isLoading = true;  
+    });
+
+    try {
+      final response = await THttpHelper.get<Reclamation>(
+        'GetLstRecl',
+        parseReclamation,
+        queryParameters: {'codeclient': codeclient},
+      );
+      setState(() {
+        reclamations = response;
+        isLoading = false;  // Masque le cercle de chargement une fois les données récupérées
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;  // Masque le cercle de chargement en cas d'erreur
+      });
+      print("Erreur lors de l'appel de l'API : $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Erreur lors de la récupération des réclamations")),
+      );
+    }
   }
+ int _countEquipements() {
+  // Récupérer tous les équipements depuis les réclamations
+  final equipementCounts = <int, int>{};
+
+  // Compter les occurrences de chaque équipement
+  for (var r in reclamations) {
+    equipementCounts[r.eqp] = (equipementCounts[r.eqp] ?? 1) + 1;
+  }
+
+  // Compter uniquement les équipements qui apparaissent une seule fois
+  return equipementCounts.values.where((count) => count == 1).length;
+}
+
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+@override
+void initState() {
+    super.initState();
+    fetchReclamation(); 
+}
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                           // "${_countEnCours()}",
-                           "etat1111",
+                            "${_countEnCours()}",
+                          
                             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue[900]),
                           ),
                         ],
@@ -69,7 +114,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               SizedBox(height: 20),
-              // Card for "Équipements disponibles"
               Card(
                 color: Colors.white,
                 elevation: 8,
@@ -115,24 +159,17 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.white, // Fond blanc
       body: _pages[_selectedIndex], // Affiche la page sélectionnée
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Réclamations',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: const Color.fromARGB(255, 13, 71, 161),
+        height: 60,
+        index: _selectedIndex,
+        items:  <Widget>[
+          Icon(Icons.home, size: 30,color: Colors.blue[900],),
+          Icon(Icons.list,size: 30,color: Colors.blue[900],),
+          Icon(Icons.person, size: 30,color: Colors.blue[900],),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[900],
+       // currentIndex: _selectedIndex,
+       // selectedItemColor: Colors.blue[900],
         onTap: _onItemTapped,
       ),
     );

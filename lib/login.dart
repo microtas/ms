@@ -148,36 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10,),
-                       SizedBox(
-                        height: 55,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed:(){
-                                  Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
-      );
-                          },
-
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            backgroundColor: Colors.blue[900],
-                            elevation: 4,
-                          ),
-                          child: const Text(
-                            'CLIENT',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      
+                     
                              
                               ],
                             ),
