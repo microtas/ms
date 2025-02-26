@@ -56,7 +56,7 @@ class _ReclamationDetailPageState extends State<ReclamationDetailPage> {
             ),
           );
         } else if (!snapshot.hasData) {
-          return Scaffold(
+          return const Scaffold(
             backgroundColor: Colors.white,
             body: Center(
               child: Text(

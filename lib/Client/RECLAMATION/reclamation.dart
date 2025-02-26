@@ -17,16 +17,16 @@ class ReclamationPage extends StatefulWidget {
 
 class _ReclamationPageState extends State<ReclamationPage> {
   final _formKey = GlobalKey<FormState>();
-
   String? _selectedEquipement;
   bool _showEquipementFields = false;
+  bool _isLoadingEquipements = false;
 
   final TextEditingController _remarqueController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _panneController = TextEditingController();
 
   bool _isLoading = false;
-  final String CodeClient = '1'; // Remplacez par le client actuel
+  final String CodeClient = '1';
 
   List<Equipement> equipements = [];
   List<Reclamation> reclamations = [];
@@ -38,78 +38,65 @@ class _ReclamationPageState extends State<ReclamationPage> {
   }
 
   Future<void> fetchEquipemnt() async {
+    setState(() {
+      _isLoadingEquipements = true;
+    });
+
     try {
       final response = await THttpHelper.get<Equipement>(
         'GetEqpClient',
         parseEquipement,
-         queryParameters: {'codeclient': '1'},
+        queryParameters: {'codeclient': '1'},
       );
       setState(() {
         equipements = response;
-        print('Equipements récupérés: $equipements');
       });
     } catch (e) {
-      print("Erreur lors de l'appel de l'API : $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erreur lors de la récupération des équipements")),
       );
-            print("Erreur lors de la récupération des équipements");
-
+    } finally {
+      setState(() {
+        _isLoadingEquipements = false;
+      });
     }
   }
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
-      bool allSuccess = true;
-
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
 
       Map<String, String> body = {
-        'equipements': _selectedEquipement ?? '',
+        'equipements': _selectedEquipement! + ' ',
         'codeclient': CodeClient,
         'Rsm': _remarqueController.text,
         'description': _descriptionController.text,
         'Obs': _panneController.text,
       };
-      print(body);
 
       try {
         bool success = await THttpHelper.postBooleen(
           'CreerReclamation',
           body,
-          (response) {
-            return response;
-          },
+          (response) => response,
         );
-
-        if (!success) {
-          allSuccess = false;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erreur lors de l\'enregistrement de la réclamation')),
-          );
-        }
 
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Réclamation créée avec succès!')),
           );
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage()),
+          Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erreur lors de l\'enregistrement de la réclamation')),
           );
         }
       } catch (e) {
-        allSuccess = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erreur lors de l\'envoi des données')),
         );
       } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -117,68 +104,86 @@ class _ReclamationPageState extends State<ReclamationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Réclamation"),
+        title: const Text("Réclamation",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 30)),
         backgroundColor: Colors.blue[900],
+        elevation: 4.0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    _buildTextField(controller: _remarqueController, label: "Remarque", icon: Icons.comment),
-                    _buildTextField(controller: _descriptionController, label: "Description", icon: Icons.description, maxLines: 3),
-                   // _buildTextField(controller: _panneController, label: "Panne", icon: Icons.padding),
-
-                    if (equipements.isNotEmpty)
-                      MultiSelectDialogField<Equipement>(
-                        items: equipements.map((equipement) => MultiSelectItem<Equipement>(equipement, equipement.Designation)).toList(),
-                        title: Text("Choisir des équipements"),
-                        selectedColor: Colors.blue[900],
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          border: Border.all(color: Colors.blue, width: 2),
+                padding: const EdgeInsets.all(20.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTextField(_remarqueController, "Remarque", Icons.comment),
+                      _buildTextField(_descriptionController, "Description", Icons.description, maxLines: 3),
+                      
+                      if (_isLoadingEquipements)
+                        Center(child: CircularProgressIndicator()),
+                      if (!_isLoadingEquipements && equipements.isNotEmpty)
+                        MultiSelectDialogField<Equipement>(
+                          items: equipements.map((e) => MultiSelectItem(e, e.Designation)).toList(),
+                          title: Text("Choisir des équipements"),
+                          selectedColor: Colors.blue[900],
+                          buttonIcon: Icon(Icons.devices_other, color: Colors.blue[900]),
+                          buttonText: Text("Sélectionner des équipements", style: TextStyle(color: Colors.blue[900])),
+                          onConfirm: (values) {
+                            setState(() {
+                              _selectedEquipement = values.map((e) => e.Code.toString()).join(',');
+                              _panneController.text = values.map((e) => "Panne pour équipement : ${e.Code}").join(', ');
+                            });
+                          },
                         ),
-                        buttonIcon: Icon(Icons.devices_other, color: Colors.blue[900]),
-                        buttonText: Text(
-                          "Sélectionner des équipements",
-                          style: TextStyle(color: Colors.blue[900], fontSize: 16),
+                      
+                      _buildTextField(_panneController, "Description de la panne", Icons.build, maxLines: 3),
+                      SizedBox(height: 40),
+                      Center(
+                        child: ElevatedButton.icon(
+                          onPressed: _submit,
+                          icon: Icon(Icons.send,color: Colors.white,),
+                          label: Text("Soumettre",style: TextStyle(color: Colors.white),),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.amber[600],
+                            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 60,),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            elevation: 5,
+                          ),
                         ),
-                        onConfirm: (values) {
-                          setState(() {
-                            _selectedEquipement = values.map((e) => e.Code.toString()).join(',');
-                            print("Équipements sélectionnés: $_selectedEquipement");
-                          });
-                        },
-                        validator: (values) => (values == null || values.isEmpty) ? "Veuillez choisir au moins un équipement" : null,
                       ),
-                    _buildTextField(controller: _panneController, label: "Description de la panne", icon: Icons.build, maxLines: 3),
-
-                    ElevatedButton(
-                      onPressed: _submit,
-                      child: const Text("Soumettre"),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String label, required IconData icon, int maxLines = 1}) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: Colors.blue[900]),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon, {int maxLines = 1}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: Colors.blue[900]),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.blue[900]!),
+          ),
+        ),
+        maxLines: maxLines,
+        validator: (value) => value!.isEmpty ? "Champ obligatoire" : null,
       ),
-      maxLines: maxLines,
-      validator: (value) => value!.isEmpty ? "Champ obligatoire" : null,
     );
   }
 }

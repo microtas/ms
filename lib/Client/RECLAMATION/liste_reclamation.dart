@@ -16,6 +16,7 @@ class ListeReclamation extends StatefulWidget {
 
 class _ListeReclamationState extends State<ListeReclamation> {
   List<Reclamation> reclamations = [];
+  bool isLoading = true; // Variable pour gérer l'état de chargement
 
   @override
   void initState() {
@@ -56,6 +57,10 @@ class _ListeReclamationState extends State<ListeReclamation> {
   }
 
   Future<void> fetchReclamation() async {
+    setState(() {
+      isLoading = true;  // Affiche le cercle de chargement avant la récupération des données
+    });
+
     try {
       final response = await THttpHelper.get<Reclamation>(
         'GetLstRecl',
@@ -64,8 +69,12 @@ class _ListeReclamationState extends State<ListeReclamation> {
       );
       setState(() {
         reclamations = response;
+        isLoading = false;  // Masque le cercle de chargement une fois les données récupérées
       });
     } catch (e) {
+      setState(() {
+        isLoading = false;  // Masque le cercle de chargement en cas d'erreur
+      });
       print("Erreur lors de l'appel de l'API : $e");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Erreur lors de la récupération des réclamations")),
@@ -84,84 +93,99 @@ class _ListeReclamationState extends State<ListeReclamation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  isLoading
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Image.asset(
+                'assets/logo.png', // Affiche le gif de chargement
+                width: 400,
+                height: 200,
+              ),
+            ),
+          )
+        :Scaffold(
       backgroundColor: Colors.white70,
       appBar: AppBar(
-        title: const Center(child: Text("Réclamations", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white))),
+        title: Text("Liste des Réclamations", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24)),
         backgroundColor: Colors.blue[900],
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: reclamations.isEmpty
-                  ? Center(
-                      child: Text(
-                        "Aucune réclamation disponible.",
-                        style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: reclamations.length,
-                      itemBuilder: (context, index) {
-                        Reclamation reclamation = reclamations[index];
-                        return Card(
-                          color: reclamation.Etat == 1 ? Colors.yellow[100] : Colors.white,  // Couleur basée sur l'état
-                          margin: const EdgeInsets.symmetric(vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 4,
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(16),
-                            leading: CircleAvatar(
-                              backgroundColor: Colors.blue[900],
-                              child: const Icon(Icons.business, color: Colors.white),
+            // Affichage du cercle de progression si isLoading est true
+           
+              Expanded(
+                child: reclamations.isEmpty
+                    ? Center(
+                        child: Text(
+                          "Aucune réclamation disponible.",
+                          style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: reclamations.length,
+                        itemBuilder: (context, index) {
+                          Reclamation reclamation = reclamations[index];
+                          return Card(
+                            color: reclamation.Etat == 1 ? Colors.yellow[100] : Colors.white,  // Couleur basée sur l'état
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            title: Text(
-                              "SOCITE",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue[900]),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  reclamation.Resume,
-                                  style: const TextStyle(color: Colors.black87),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  _getEtatText(reclamation.Etat),
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blue[900]),
-                                ),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (reclamation.Etat == 0)
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () => _deleteReclamation(index),
+                            elevation: 4,
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(16),
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue[900],
+                                child: const Icon(Icons.business, color: Colors.white),
+                              ),
+                              title: Text(
+                                "SOCITE",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.blue[900]),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    reclamation.Resume,
+                                    style: const TextStyle(color: Colors.black87),
                                   ),
-                                Icon(Icons.arrow_forward_ios, color: Colors.blue[900]),
-                              ],
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    _getEtatText(reclamation.Etat),
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blue[900]),
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (reclamation.Etat == 0)
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => _deleteReclamation(index),
+                                    ),
+                                  Icon(Icons.arrow_forward_ios, color: Colors.blue[900]),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReclamationDetailPage(reclamation: reclamation),
+                                  ),
+                                );
+                              },
                             ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ReclamationDetailPage(reclamation: reclamation),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-            ),
+                          );
+                        },
+                      ),
+              ),
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: ElevatedButton(
