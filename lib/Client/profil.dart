@@ -3,6 +3,7 @@ import 'package:ms_maintain/API/HttpRequest.dart';
 import 'package:ms_maintain/API/classes.dart';
 import 'package:ms_maintain/API/paresXML.dart';
 import 'package:ms_maintain/API/user.dart';
+import 'package:ms_maintain/login.dart';
 
 class ProfilPage extends StatefulWidget {
   @override
@@ -34,12 +35,17 @@ class _ProfilPageState extends State<ProfilPage> {
     }
   }
 
-  void _logout() {
+ void _logout() {
     setState(() {
-      CurrentUser.loggedInClient = null; // Supprime l'utilisateur connecté
+      CurrentUser.loggedInUser = null; // Supprime l'utilisateur connecté
     });
-  }
 
+    // Navigue vers l'écran de connexion
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (Route<dynamic> route) => false,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Client>(
